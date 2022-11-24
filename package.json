@@ -1,0 +1,14 @@
+{
+	"name": "outlife",
+	"version": "0.0.1",
+	"description": "",
+	"author": "Waldemar Zieliński",
+	"license": "ISC",
+	"scripts": {},
+	"devDependencies": {
+		"typescript": "^4.9.3"
+	},
+	"workspaces": [
+		"backend"
+	]
+}
