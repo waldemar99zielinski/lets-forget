@@ -18,7 +18,7 @@
       "forceConsistentCasingInFileNames": false,
       "noFallthroughCasesInSwitch": false,
       "paths": {
-        "@outlife/backend/*": [
+        "@lets-forget/backend/*": [
           "backend/*"
         ],
       },
