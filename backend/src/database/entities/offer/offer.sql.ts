@@ -30,10 +30,10 @@ export const createOffersTable = `
             FOREIGN KEY (place_id) 
                 REFERENCES places(id),
         CONSTRAINT fk_offer_user
-            FOREIGN KEY (user_id) 
+            FOREIGN KEY (author_id) 
                 REFERENCES users(id),
         CONSTRAINT fk_offer_type
             FOREIGN KEY (type_id) 
-                REFERENCES types(id),
+                REFERENCES offers_types(id)
     );
 `;

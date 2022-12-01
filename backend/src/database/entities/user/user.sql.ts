@@ -14,7 +14,7 @@ export const createUsersTable = `
         auth_strategy       user_authstrategy_enum NOT NULL,
 
         PRIMARY KEY (id),
-        CONSTRAINT user_unique_email_auth_strategy_constraint UNIQUE(email, auth_strategy)
+        CONSTRAINT user_unique_email_auth_strategy_constraint UNIQUE(email, auth_strategy),
         UNIQUE(user_name)
     );
 `;

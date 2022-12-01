@@ -14,7 +14,7 @@ export abstract class BaseRepository<T> {
     }
 
     public async create(data: T): Promise<string> {
-        const response = await this._repository.insert(data);
+        const response = await this._repository.insert(data as any);
         return response.identifiers[0].id;
     }
 
@@ -47,7 +47,7 @@ export abstract class BaseRepository<T> {
     }
 
     public async updateOneById(id: string, data: T): Promise<UpdateResult> {
-        return this._repository.update(id, data);
+        return this._repository.update(id, data as any);
     }
 
     public async deleteOneById(id: any): Promise<DeleteResult> {

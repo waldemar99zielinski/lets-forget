@@ -1,6 +1,6 @@
 export const createCitiesTable = `
     CREATE TABLE cities (
-        id              TEXT NOT NULL,
+        id              TEXT,
         country_id      TEXT NOT NULL,
 
         PRIMARY KEY (id),

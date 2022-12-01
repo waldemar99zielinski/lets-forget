@@ -20,7 +20,7 @@ spec:
             - name: POSTGRES_USER
               value: admin
             - name: POSTGRES_DB
-              value: postgres
+              value: letsforget
             - name: POSTGRES_PASSWORD
               value: password
           ports:

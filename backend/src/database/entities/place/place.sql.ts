@@ -16,6 +16,6 @@ export const createPlacesTable = `
         PRIMARY KEY (id),
         CONSTRAINT fk_place_city 
             FOREIGN KEY (city_id) 
-                REFERENCES cites(id),
-    )
+                REFERENCES cities(id)
+    );
 `;

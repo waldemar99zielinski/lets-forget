@@ -39,7 +39,7 @@ export class Offer {
     @Column({name: 'ends_at', type: 'timestamptz'})
     endsAt?: Date;
 
-    @Column({name: 'days_of_the_week', type: 'array'})
+    @Column({name: 'days_of_the_week', type: 'enum', enum: DaysOfTheWeek, array: true})
     daysOfTheWeek?: DaysOfTheWeek[];
 
     @Column({name: 'start_time', type: 'timetz'})

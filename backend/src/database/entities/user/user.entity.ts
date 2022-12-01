@@ -6,7 +6,6 @@ export enum AuthStrategy {
 }
 
 @Entity('users')
-@Unique('user_unique_email_auth_strategy_constraint', ['email', 'auth_strategy'])
 export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;

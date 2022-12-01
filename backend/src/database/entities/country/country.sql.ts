@@ -1,6 +1,6 @@
 export const createCountriesTable = `
     CREATE TABLE countries (
-        id      TEXT NOT NULL,
+        id      TEXT,
 
         PRIMARY KEY (id)
     );

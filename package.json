@@ -6,7 +6,8 @@
 	"license": "ISC",
 	"scripts": {},
 	"devDependencies": {
-		"typescript": "^4.9.3"
+		"typescript": "^4.9.3",
+		"cross-env": "7.0.3"
 	},
 	"workspaces": [
 		"backend"
