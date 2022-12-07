@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { DefaultLayout } from "src/layouts/DefaultLayout";
+import { DefaultPageLayout } from "src/layouts/DefaultPageLayout";
 
 import { getPath, Path } from "./routes";
 
@@ -10,7 +10,7 @@ import { RootPage } from "src/pages/RootPage";
 
 export const AppRouter = () => {
     return <Routes>
-        <Route path={getPath(Path.root)} element={<DefaultLayout />}>
+        <Route path={getPath(Path.root)} element={<DefaultPageLayout />}>
             <Route index element={<RootPage />} />
             <Route path={getPath(Path.map)} element={<MapPage />} />
             <Route path={getPath(Path.offer)} element={<OfferPage />} />

@@ -10,6 +10,7 @@
 		"cross-env": "7.0.3"
 	},
 	"workspaces": [
-		"backend"
+		"backend",
+		"frontend"
 	]
 }
