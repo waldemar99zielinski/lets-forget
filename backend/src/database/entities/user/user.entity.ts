@@ -13,6 +13,9 @@ export class User {
     @Column('text')
     email: string;
 
+    @Column({name: 'is_email_confirmed', type: 'boolean'})
+    isEmailConfirm: boolean;
+
     @Column({name: 'user_name', type: 'text', unique: true})
     userName: string;
 

@@ -7,6 +7,7 @@ export const createUsersTable = `
         id                  uuid DEFAULT uuid_generate_v4(),
 
         email               TEXT NOT NULL,
+        is_email_confirmed  BOOLEAN NOT NULL DEFAULT FALSE,
         user_name           TEXT NOT NULL,
         
         password_hash       TEXT DEFAULT NULL,

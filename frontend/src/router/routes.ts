@@ -3,13 +3,17 @@ export enum Path {
     offer = 'offer',
     profile = 'profile',
     map = 'map',
+    mobileView = 'mobile',
+    mobileUserMenu = 'user-menu'
 }
 
 const pathsStructure: Record<Path, Path | null> = {
     [Path.root]: null,
     [Path.offer]: null,
     [Path.profile]: null,
-    [Path.map]: null
+    [Path.map]: null,
+    [Path.mobileView]: null,
+    [Path.mobileUserMenu]: Path.mobileView,
 };
 
 export const getPath = (route: Path) => {

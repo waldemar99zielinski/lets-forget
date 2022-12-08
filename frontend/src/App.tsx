@@ -7,9 +7,9 @@ import {ThemeProvider} from './context/theme/ThemeProvider';
 function App() {
 
 	return <BrowserRouter>
-		{/* <ThemeProvider> */}
+		<ThemeProvider>
 			<AppRouter />
-		{/* </ThemeProvider> */}
+		</ThemeProvider>
 	</BrowserRouter>;
 }
 
