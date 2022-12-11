@@ -1,13 +1,11 @@
 import { Body, Controller, Get, Post, Patch, Delete, Res, Param, HttpStatus, UsePipes, HttpException, HttpCode} from '@nestjs/common';
-import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
-// import { getHttpError } from 'src/utils/errors/handleErrors';
-import { UserService } from 'src/modules/user/user.service';
-// import { AuthStrategy, User } from 'src/database/entities/user.entity';
-
 import { JoiObjectSchemaPipe } from 'src/common/pipes/JoiObjectSchema.pipe';
+import { UserService } from 'src/modules/user/user.service';
+import { JWTService } from 'src/utils/jwt/jwt.service';
+import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
 
 import { AuthenticationService } from './authentication.service';
-import { pipe } from 'rxjs';
+
 // import { GoogleAuthenticationService } from './google.authentication.service';
 
 import { SignUpRequestDto, SignUpRequestSchema } from './dto/SignUpRequest.dto';
@@ -23,6 +21,7 @@ export class AuthenticationController {
         private readonly _loggerService: LoggerService,
         private readonly _userService: UserService,
         private readonly _authenticationService: AuthenticationService,
+        private readonly _jwtService: JWTService,
         private readonly _mailerService: MailerService
         // private readonly _googleAuthenticationService: GoogleAuthenticationService
     ) {
@@ -61,8 +60,6 @@ export class AuthenticationController {
 
         const databaseUser = await this._userService.getUserByEmailAndAuthStategy(body.email, AuthStrategy.local);
 
-        console.log('databaseUser', databaseUser);
-
         if(!databaseUser)
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
 
@@ -71,7 +68,7 @@ export class AuthenticationController {
         if(passwordHash !== databaseUser.passwordHash)
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
 
-        const token = await this._authenticationService.signJWT(databaseUser.id);
+        const token = await this._jwtService.signJWTAccess(databaseUser.id);
 
         this._logger.info('Signin request completed user with email %s', body.email);
 
@@ -112,17 +109,4 @@ export class AuthenticationController {
 
     //     res.status(HttpStatus.OK).json({user: userProto, token});
     // }
-
-    // TODO: remove this !!!
-    @Post('/verify')
-    public async verify(@Body() request: {token: string}) {
-    
-            this._logger.info('verify request received for user with request %o', request);
-
-            const decoded = await this._authenticationService.verifyJWT(request.token);
-
-
-            this._logger.info('verify request completed user with decoded %o', decoded);
-        
-    }
 }
