@@ -8,7 +8,7 @@ export const AuthProtectedRoute = (props: PropsWithChildren) => {
     const { isSignedIn } = useAuthGuard();
 
     if(!isSignedIn)
-        return <Navigate to={getPath(Path.signIn)} />;
+        return <Navigate to={getPath(Path.signIn)} replace />;
 
     return <>
         {props.children}
