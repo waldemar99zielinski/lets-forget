@@ -57,6 +57,10 @@ export class UserService {
         return users[0];
     }
 
+    public async activateEmailForUserId(userId: string): Promise<void> {
+        return this._userRepository.activateEmailByUserId(userId);
+    }
+
     // public async updateUser(user: User) {
     //     return this._userRepository.updateOneById(user.id, user);
     // }

@@ -23,11 +23,19 @@ export class JWTService {
         return this._verifyJWT(token, TokenType.access);
     }
 
+    public async signJWTActivate(userId: string) {
+        return this._signJWT(userId, TokenType.activation, '1d');
+    }
+
+    public async verifyJWTActivate(token: string) {
+        return this._verifyJWT(token, TokenType.activation);
+    }
+
     private async _signJWT(userId: string, tokenType: TokenType, expiration: string) {
         const token = await new SignJWT({tokenType})
             .setProtectedHeader({alg: 'HS256'})
             .setSubject(userId)
-            .setExpirationTime('1d')
+            .setExpirationTime(expiration)
             .sign(this._jwtSecret);
         
         return token;

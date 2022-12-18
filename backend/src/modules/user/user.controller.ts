@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post, Delete,  HttpStatus, HttpException, HttpCode, UsePipes} from '@nestjs/common';
+import { Body, Controller, Get, Post, Delete,  HttpStatus, HttpException, HttpCode, UsePipes, UseGuards, Headers, Request} from '@nestjs/common';
 
 import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
 import { JoiObjectSchemaPipe } from 'src/common/pipes/JoiObjectSchema.pipe';
 
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { USER_ID } from 'src/utils/headers/headersValues';
 
 @Controller('api/v1/user')
 export class UserController {
@@ -16,6 +18,15 @@ export class UserController {
         this._logger =  this._loggerService.getLoggerWithLabel(UserController.name);
     }
 
+    @Get()
+    @UseGuards(AuthGuard)
+    public authTest(
+        @Headers(USER_ID) userId: string,
+        @Request() req
+    ) {
+
+        return 'good';
+    }
 
     // @Get()
     // public async getUsers() {

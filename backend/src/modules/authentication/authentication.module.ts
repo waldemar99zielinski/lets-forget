@@ -18,7 +18,7 @@ import { MailerModule } from '../mailer/mailer.module';
 		TypeOrmModule.forFeature([User]),
 		LoggerModule,
 		UserModule,
-		MailerModule
+		MailerModule,
 	],
 	controllers: [AuthenticationController],
 	providers: [

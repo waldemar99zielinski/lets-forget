@@ -21,4 +21,11 @@ export class UserRepository extends BaseRepository<User> {
             .andWhere({authStrategy})
             .getMany();
     }
+
+    public async activateEmailByUserId(userId: string) {
+        await this._userRepository.createQueryBuilder()
+            .update({isEmailConfirmed: true})
+            .where({id: userId})
+            .execute();
+    }
 }
