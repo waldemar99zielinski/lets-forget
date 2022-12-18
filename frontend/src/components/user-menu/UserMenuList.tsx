@@ -4,12 +4,17 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonIcon from '@mui/icons-material/Person';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuthGuard } from 'src/context/guards/AuthGuard/useAuthGuard';
 
 interface UserMenuListProps {
     onItemClick?: () => void;
 }
 
 export const UserMenuList = (props: UserMenuListProps) => {
+    const navigate = useNavigate();
+    const { signOut } = useAuthGuard();
 
     const handleAction = (action: () => void) => {
         if(props.onItemClick)
@@ -29,7 +34,10 @@ export const UserMenuList = (props: UserMenuListProps) => {
             key: 'signout',
             icon: <ExitToAppIcon />,
             text: 'Sign out',
-            action: () => handleAction(() => console.log('sign out'))
+            action: () => handleAction(() => {
+                signOut();
+                navigate('/');
+            })
         }
     ];
 

@@ -10,8 +10,6 @@ const resources = {
     pl
 };
 
-console.log('resources:', resources);
-
 export const availableLanguages = Object.keys(resources);
 
 i18n.use(initReactI18next)

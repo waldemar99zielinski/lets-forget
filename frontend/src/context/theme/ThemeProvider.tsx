@@ -5,7 +5,6 @@ export const theme = createTheme({
     palette: {
       primary: {
         main: '#37196D',
-        // main: '#f9f9f9',
         contrastText: '#ffffff',
         light: '#8968ad',
         dark: '#1f0369',
@@ -41,6 +40,13 @@ export const theme = createTheme({
       borderRadius: 4,
     },
     spacing: 8,
+    typography: {
+      "fontFamily": `"Roboto", "Helvetica", "Arial", sans-serif`,
+      "fontSize": 14,
+      "fontWeightLight": 300,
+      "fontWeightRegular": 400,
+      "fontWeightMedium": 500
+     }
 });
 
 export const ThemeProvider = (props: PropsWithChildren<unknown>) => {

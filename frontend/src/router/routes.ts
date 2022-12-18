@@ -4,7 +4,12 @@ export enum Path {
     profile = 'profile',
     map = 'map',
     mobileView = 'mobile',
-    mobileUserMenu = 'user-menu'
+    mobileUserMenu = 'user-menu',
+    auth = 'auth',
+    signIn = 'signin',
+    signUp = 'signup',
+    signOut = 'signout',
+    activate = 'activate'
 }
 
 const pathsStructure: Record<Path, Path | null> = {
@@ -13,7 +18,12 @@ const pathsStructure: Record<Path, Path | null> = {
     [Path.profile]: null,
     [Path.map]: null,
     [Path.mobileView]: null,
-    [Path.mobileUserMenu]: Path.mobileView,
+        [Path.mobileUserMenu]: Path.mobileView,
+    [Path.auth]: null,
+        [Path.signIn]: Path.auth,
+        [Path.signUp]: Path.auth,
+        [Path.signOut]: Path.auth,
+        [Path.activate]: Path.auth
 };
 
 export const getPath = (route: Path) => {
