@@ -3,6 +3,8 @@ export const createOffersTable = `
 
     CREATE TYPE days_of_the_week_enum AS ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday');
 
+    CREATE TYPE currency_enum AS ENUM('PLN');
+
     CREATE TABLE offers (
         id                  uuid DEFAULT uuid_generate_v4(),
         place_id            uuid NOT NULL,
@@ -13,6 +15,7 @@ export const createOffersTable = `
         description         text,
 
         price               numeric,
+        currency            currency_enum,
 
         starts_at           timestamptz NOT NULL DEFAULT NOW(),
         ends_at             timestamptz,

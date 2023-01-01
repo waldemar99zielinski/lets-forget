@@ -13,7 +13,7 @@ export abstract class BaseRepository<T> {
         return this._repository;
     }
 
-    public async create(data: T): Promise<string> {
+    public async create(data: T | Omit<T, 'id'>): Promise<string> {
         const response = await this._repository.insert(data as any);
         return response.identifiers[0].id;
     }

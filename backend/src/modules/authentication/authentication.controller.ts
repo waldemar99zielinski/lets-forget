@@ -86,18 +86,11 @@ export class AuthenticationController {
             this._logger.error('Signup local error: %o', error);
 
             if(error.code === PostgresErrorCodes.uniqueViolation) {
-                //handle it
+                // TODO handle it
             }
+
+            throw error;
         }
-
-
-
-
-        // this._logger.info(
-        //     'Signup local request completed user created with email %s, id %s', 
-        //     body.email, 
-        //     createdUserId
-        // );
     }
 
     @Post('/activate')

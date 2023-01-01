@@ -9,7 +9,7 @@ import { USER_ID } from 'src/utils/headers/headersValues';
 
 @Controller('api/v1/user')
 export class UserController {
-    private readonly _logger: LoggerInterface
+    private readonly _logger: LoggerInterface;
 
     constructor (
         private readonly _userService: UserService,

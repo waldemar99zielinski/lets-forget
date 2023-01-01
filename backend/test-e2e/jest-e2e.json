@@ -1,0 +1,15 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleDirectories": ["node_modules", "src"],
+  "moduleNameMapper": {
+    "axios": "axios/dist/node/axios.cjs"
+  },
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".test.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "verbose": false,
+  "setupFiles": ["dotenv/config"]
+}

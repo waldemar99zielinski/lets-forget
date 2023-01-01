@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-import { createCitiesTable } from "src/database/entities/city/city.sql";
+import { createCitiesTable } from "../entities/city/city.sql";
 import { createCountriesTable } from "../entities/country/country.sql";
 import { createOffersTable } from "../entities/offer/offer.sql";
 import { createOffersTypeTable } from "../entities/offer-type/offer-type.sql";

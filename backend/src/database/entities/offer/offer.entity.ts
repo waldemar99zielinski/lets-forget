@@ -10,6 +10,10 @@ export enum DaysOfTheWeek {
     sunday
 }
 
+export enum Currency {
+    PLN = 'PLN'
+}
+
 @Entity('offers')
 export class Offer {
     @PrimaryGeneratedColumn('uuid')
@@ -21,6 +25,9 @@ export class Offer {
     @Column({name: 'author_id', type: 'uuid'})
     authorId: string;
 
+    @Column({name: 'type_id', type: 'text'})
+    typeId: string;
+
     @Column('text')
     title: string;
 
@@ -30,8 +37,8 @@ export class Offer {
     @Column('numeric')
     price?: number;
 
-    @Column('text')
-    typeId: string; 
+    @Column({type: 'enum', enum: Currency})
+    currency?: Currency; 
 
     @Column({name: 'starts_at', type: 'timestamptz'})
     startsAt: Date;

@@ -6,15 +6,14 @@ export class JoiObjectSchemaPipe implements PipeTransform {
     constructor(private schema: ObjectSchema) {}
 
     transform(value: any, metadata: ArgumentMetadata) {
-        const { error } = this.schema.validate(value);
+        const { value: parsedValue, error } = this.schema.validate(value);
         if (error) {
-            // TODO: czy dawac wiadomosc dla api?
+            console.log(value, error)
             throw new BadRequestException({
                 error: 'Bad request',
                 message: error.message
             });
         }
-
-        return value;
+        return parsedValue;
     }
 }

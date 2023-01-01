@@ -6,11 +6,11 @@ export class Place {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('text')
-    name: string;
-
     @Column({name: 'city_id', type: 'text'})
     cityId: string;
+
+    @Column('text')
+    name: string;
 
     @Column('text')
     street: string;
