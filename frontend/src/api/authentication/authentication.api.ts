@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import {backendBase} from 'src/api/endpoints';
+import {backendBaseV1} from 'src/api/endpoints';
 
-const authenticationUrl = backendBase + '/authentication';
+const authenticationUrl = backendBaseV1 + '/authentication';
 
 interface SignUpResponseData {
 

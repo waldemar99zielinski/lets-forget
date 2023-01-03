@@ -6,4 +6,4 @@ export const backendBaseUrl = `${backendBaseProtocol}://${backendBaseHost}:${bac
 
 export const apiV1Prefix = `/api/v1`;
 
-export const backendBase = backendBaseUrl + apiV1Prefix;
+export const backendBaseV1 = backendBaseUrl + apiV1Prefix;
