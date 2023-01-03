@@ -1,0 +1,8 @@
+.leaflet-attribution-flag {
+    display: none !important;
+}
+
+.leaflet-div-icon {
+    background: none;
+    border: none;
+}
