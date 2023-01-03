@@ -33,22 +33,16 @@ export class PlaceRepository extends BaseRepository<Place> {
         }
 
         // TODO take edge cases into consideration
-        if(query.latitude && query.longitude && query.radius) {
-
-            const minLat = query.latitude - convertKmToDegree(query.radius)
-            const maxLat = query.latitude + convertKmToDegree(query.radius)
+        if(query.n && query.s && query.w && query.e) {
 
             createQuery.andWhere('latitude BETWEEN :minLat AND :maxLat', {
-                minLat,
-                maxLat,
+                minLat: query.s,
+                maxLat: query.n,
             });
 
-            const minLng = query.longitude - convertKmToDegree(query.radius)
-            const maxLng = query.longitude + convertKmToDegree(query.radius)
-
             createQuery.andWhere('longitude BETWEEN :minLng AND :maxLng', {
-                minLng,
-                maxLng
+                minLng: query.w,
+                maxLng: query.e
             });
         }
 

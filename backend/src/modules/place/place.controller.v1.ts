@@ -7,6 +7,7 @@ import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service'
 import { PlaceService } from './place.service';
 import { GetPlacesQueryDto, GetPlacesQuerySchema } from './dto/GetPlacesRequest.dto';
 import { PostPlaceRequestDto, PostPlaceRequestSchema } from './dto/PostPlaceRequest.dto';
+import { CoordinatesDistancePipe } from './pipes/CoordinatesDistance.pipe';
 
 @Controller('api/v1/place')
 export class PlaceControllerV1 {
@@ -22,7 +23,10 @@ export class PlaceControllerV1 {
     @Get()
     @HttpCode(HttpStatus.OK)
     public async getPlaces(
-        @Query(new JoiObjectSchemaPipe(GetPlacesQuerySchema)) query: GetPlacesQueryDto
+        @Query(
+            new JoiObjectSchemaPipe(GetPlacesQuerySchema),
+            new CoordinatesDistancePipe({lat1: 'n', lat2: 's', lng1: 'e', lng2: 'w'}, 20)
+        ) query: GetPlacesQueryDto
     ) {
         this._logger.info('Get request received with query %o', query);
 
