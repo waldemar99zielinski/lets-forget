@@ -5,9 +5,9 @@ export const theme = createTheme({
     palette: {
       primary: {
         main: '#37196D',
-        contrastText: '#ffffff',
-        light: '#8968ad',
-        dark: '#1f0369',
+        contrastText: '#fff',
+        light: '#6f3f8e',
+        dark: '#090036',
       },
       secondary: {
         main: '#f9f9f9',
@@ -21,8 +21,8 @@ export const theme = createTheme({
         primary: '#ffffff',
       },
       background: {
-        default: '#1c1b1b',
-        paper: '#141313',
+        default: '#1F1E1E',
+        paper:'#4d4b62',
       },
       divider: 'rgba(16,15,15,0.39)',
       error: {
