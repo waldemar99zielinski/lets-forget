@@ -15,15 +15,15 @@ export const createOffersTable = `
         description         text,
 
         price               numeric,
-        currency            currency_enum,
+        currency            currency_enum DEFAULT 'PLN',
 
         starts_at           timestamptz NOT NULL DEFAULT NOW(),
         ends_at             timestamptz,
-        
+
         days_of_the_week    days_of_the_week_enum[],
 
-        start_time          timetz,
-        end_time            timetz,
+        start_time          time,
+        end_time            time,
 
         created_at          timestamptz NOT NULL DEFAULT NOW(),
         updated_at          timestamptz NOT NULL DEFAULT NOW(),

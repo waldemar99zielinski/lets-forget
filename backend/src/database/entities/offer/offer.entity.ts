@@ -38,7 +38,7 @@ export class Offer {
     price?: number;
 
     @Column({type: 'enum', enum: Currency})
-    currency?: Currency; 
+    currency?: Currency;
 
     @Column({name: 'starts_at', type: 'timestamptz'})
     startsAt: Date;
@@ -49,10 +49,10 @@ export class Offer {
     @Column({name: 'days_of_the_week', type: 'enum', enum: DaysOfTheWeek, array: true})
     daysOfTheWeek?: DaysOfTheWeek[];
 
-    @Column({name: 'start_time', type: 'timetz'})
+    @Column({name: 'start_time', type: 'time'})
     startTime?: string;
 
-    @Column({name: 'end_time', type: 'timetz'})
+    @Column({name: 'end_time', type: 'time'})
     endTime?: string;
 
     @Column({name: 'created_at', type: 'timestamptz'})

@@ -118,13 +118,17 @@ export class AuthenticationController {
 
         const databaseUser = await this._userService.getUserByEmailAndAuthStategy(body.email, AuthStrategy.local);
 
-        if(!databaseUser || !databaseUser.isEmailConfirmed)
+        if(!databaseUser || !databaseUser.isEmailConfirmed) {
+            this._logger.warn('Sign in request fail, user does not exsit or email is not confirmed for %s', body.email);
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
 
         const passwordHash = await this._authenticationService.getHash(body.password, databaseUser.passwordSalt);
 
-        if(passwordHash !== databaseUser.passwordHash)
+        if(passwordHash !== databaseUser.passwordHash) {
+            this._logger.warn('Sign in request fail, password does not match for %s', body.email);
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+        }
 
         const token = await this._jwtService.signJWTAccess(databaseUser.id);
 
@@ -132,6 +136,7 @@ export class AuthenticationController {
 
         return {
             user: {
+                id: databaseUser.id,
                 email: databaseUser.email,
                 username: databaseUser.username
             },

@@ -29,14 +29,17 @@ export class CoordinatesDistancePipe implements PipeTransform {
 
         const lat1 = value[this._coordinatesKeys.lat1];
         const lat2 = value[this._coordinatesKeys.lat2];
-        const lnt1 = value[this._coordinatesKeys.lng1];
-        const lnt2 = value[this._coordinatesKeys.lng2];
+        const lng1 = value[this._coordinatesKeys.lng1];
+        const lng2 = value[this._coordinatesKeys.lng2];
+
+        if(!lat1 || !lat2 || !lng1 || !lng2)
+            return value;
 
         const R = 6371; // in km
         const φ1 = lat1 * Math.PI/180; // φ, λ in radians
         const φ2 = lat2 * Math.PI/180;
         const Δφ = (lat2-lat1) * Math.PI/180;
-        const Δλ = (lnt2-lnt1) * Math.PI/180;
+        const Δλ = (lng2-lng1) * Math.PI/180;
 
         const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
             Math.cos(φ1) * Math.cos(φ2) *

@@ -1,5 +1,7 @@
 import * as Joi from 'joi';
 
+import { latitudeSchema, longitudeSchema } from 'src/common/validation/coordinates';
+
 export interface GetPlacesQueryDto {
     city?: string;
     name?: string;
@@ -11,18 +13,6 @@ export interface GetPlacesQueryDto {
     w?: number; // longitude
     e?: number; // longitude
 }
-
-const latitudeSchema = Joi
-    .number()
-    .min(-90)
-    .max(90)
-    .precision(6);
-
-const longitudeSchema = Joi
-    .number()
-    .min(-180)
-    .max(180)
-    .precision(6);
 
 export const GetPlacesQuerySchema = Joi.object<GetPlacesQueryDto>({
     city: Joi.string(),

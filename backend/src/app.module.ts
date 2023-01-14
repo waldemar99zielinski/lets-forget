@@ -6,6 +6,7 @@ import { ConfigModule } from './config/config.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { CityModule } from './modules/city/city.module';
 import { CountryModule } from './modules/country/country.module';
+import { OfferModule } from './modules/offer/offer.module';
 import { OfferTypeModule } from './modules/offer-type/offer-type.module';
 import { PlaceModule } from './modules/place/place.module';
 import { UserModule } from './modules/user/user.module';
@@ -22,6 +23,7 @@ import { LoggerModule } from './utils/logger';
 		AuthenticationModule,
 		CityModule,
 		CountryModule,
+		OfferModule,
 		OfferTypeModule,
 		PlaceModule,
 		UserModule,

@@ -2,12 +2,12 @@ import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Param, 
 
 import { ForeignKeyViolationInterceptor } from 'src/common/interceptors/ForeignKeyViolation.interceptor';
 import { JoiObjectSchemaPipe } from 'src/common/pipes/JoiObjectSchema.pipe';
+import { CoordinatesDistancePipe } from 'src/common/pipes/CoordinatesDistance.pipe';
 import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
 
 import { PlaceService } from './place.service';
 import { GetPlacesQueryDto, GetPlacesQuerySchema } from './dto/GetPlacesRequest.dto';
 import { PostPlaceRequestDto, PostPlaceRequestSchema } from './dto/PostPlaceRequest.dto';
-import { CoordinatesDistancePipe } from './pipes/CoordinatesDistance.pipe';
 
 @Controller('api/v1/place')
 export class PlaceControllerV1 {
@@ -31,11 +31,6 @@ export class PlaceControllerV1 {
         this._logger.info('Get request received with query %o', query);
 
         const places = await this._placeService.getPlacesByQuery(query);
-
-        if(!places.length) {
-            this._logger.error('Get request no places found for query %o', query);
-            throw new NotFoundException();
-        }
 
         this._logger.info('Get request completed');
 

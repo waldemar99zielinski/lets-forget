@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { OfferType } from 'src/database/entities/offer-type/offer-type.entity';
 import { OfferTypeRepository } from 'src/database/repositories/offerType.repository';
-import { OfferControllerV1 } from '../offer/offer.controller.v1';
+
+import { OfferTypeControllerV1 } from './offer-type.controller.v1';
 import { OfferTypeService } from './offer-type.service';
 
 @Module({
@@ -10,7 +12,7 @@ import { OfferTypeService } from './offer-type.service';
         TypeOrmModule.forFeature([OfferType])
     ],
     controllers: [
-        OfferControllerV1
+        OfferTypeControllerV1
     ],
     providers: [
         OfferTypeRepository,

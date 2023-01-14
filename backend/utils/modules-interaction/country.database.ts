@@ -9,7 +9,7 @@ interface CreateCountryProps
     c?: DataSource; 
 }
 
-export const createCountry = async (props?: CreateCountryProps) => {
+export const createCountry = async (props: CreateCountryProps) => {
     const countryName = props.name || faker.word.noun() + faker.datatype.uuid();
 
     const c = props.c || await DB().initialize();

@@ -3,6 +3,10 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+export interface DBInterface {
+    c?: DataSource;
+}
+
 export const DB = () => new DataSource({
     type: 'postgres',
     host: process.env.POSTGRES_HOST,

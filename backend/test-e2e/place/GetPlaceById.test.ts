@@ -1,8 +1,6 @@
 import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
-import { PostPlaceRequestDto } from '../../src/modules/place/dto/PostPlaceRequest.dto';
-
 import { baseUrlV1 } from '../../utils/config/url';
 import { createTestPlace } from '../../utils/modules-interaction/place.api';
 
@@ -41,5 +39,4 @@ describe(`Get place by id GET - ${placeUrl}/:id`, () => {
             .get(`/${faker.datatype.uuid()}`)
             .expect(404)
     });
-
 });
