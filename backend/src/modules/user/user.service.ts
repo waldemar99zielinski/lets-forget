@@ -24,14 +24,11 @@ export class UserService {
     //     return this._userRepository.findAll();
     // }
 
-    // public async getUser(id: string) {
-    //     const user = await this._userRepository.findOneById(id);
+    public async getUser(id: string): Promise<User | null> {
+        const user = await this._userRepository.findOneById(id);
 
-    //     if(!user)
-    //         throw {code: GenericErrorCodes.not_found};
-
-    //     return user;
-    // }
+        return user;
+    }
 
     // public async getUserByEmail(email: string) {
     //     const user = await this._userRepository.findUserByEmail(email);
@@ -59,6 +56,10 @@ export class UserService {
 
     public async activateEmailForUserId(userId: string): Promise<void> {
         return this._userRepository.activateEmailByUserId(userId);
+    }
+
+    public async patchUser(userId: string, user: Partial<User>) {
+        return this._userRepository.getRepository().update(userId, user);
     }
 
     // public async updateUser(user: User) {

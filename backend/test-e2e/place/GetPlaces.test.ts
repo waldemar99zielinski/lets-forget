@@ -100,33 +100,4 @@ describe(`Get places with query GET - ${placeUrl}?`, () => {
                 );
             });
     });
-
-    // it('should get place by coordinates radius 10km', async () => {
-    //     const createdPlace = await createTestPlace({
-    //         latitude: 
-    //     });
-    //     const createdPlace2 = 
-    //     // coordinates in 0.5 km square
-    //     const searchLatitude = createdPlace.latitude + convertKmToDegree(0.5);
-    //     const searchLongitude = createdPlace.longitude + convertKmToDegree(0.5);
-
-    //     console.log('search coords', searchLatitude, searchLongitude);
-
-    //     return request(placeUrl)
-    //         .get(`?latitude=${searchLatitude}&longitude=${searchLongitude}&radius=1`)
-    //         .expect(200)
-    //         .expect((respose: request.Response) => {
-    //             const returnedPlaces: Place[] = respose.body;
-
-    //             const filteredPlace = returnedPlaces.find((place) => place.id === createdPlace.id);
-
-    //             expect(filteredPlace).toEqual(
-    //                 expect.objectContaining({
-    //                     ...createdPlace,
-    //                     latitude: Number(createdPlace.latitude).toFixed(6),
-    //                     longitude: Number(createdPlace.longitude).toFixed(6)
-    //                 })
-    //             );
-    //         });
-    // });
 });

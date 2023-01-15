@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Post, Delete,  HttpStatus, HttpException, HttpCode, UsePipes, UseGuards, Headers, Request} from '@nestjs/common';
+import { Body, Controller, Get, UseGuards, Headers, NotFoundException, Patch, UsePipes, HttpCode, HttpStatus, UseInterceptors} from '@nestjs/common';
 
 import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
 import { JoiObjectSchemaPipe } from 'src/common/pipes/JoiObjectSchema.pipe';
-
-import { UserService } from './user.service';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { USER_ID } from 'src/utils/headers/headersValues';
+import { DuplicateKeyViolationInterceptor } from 'src/common/interceptors/DuplicateKeyViolation.interceptor';
+
+import { PatchMeRequestDto, PatchMeRequestSchema } from './dto/PatchMeRequest.dto';
+import { UserService } from './user.service';
 
 @Controller('api/v1/user')
 export class UserController {
@@ -18,14 +20,45 @@ export class UserController {
         this._logger =  this._loggerService.getLoggerWithLabel(UserController.name);
     }
 
-    @Get()
+    @Get('/me')
     @UseGuards(AuthGuard)
-    public authTest(
+    public async getMe(
         @Headers(USER_ID) userId: string,
-        @Request() req
     ) {
+        this._logger.info('Get me request received from user %s', userId);
 
-        return 'good';
+        const user = await this._userService.getUser(userId);
+
+        if(!user) {
+            this._logger.error('Get me request failed, not found user %s', userId);
+            throw new NotFoundException();
+        }
+
+        this._logger.info('Get me request completed from user %s', userId);
+
+        return {
+            id: user.id,
+            email: user.email,
+            username: user.username
+        };
+    }
+
+    @Patch('/me')
+    @UseGuards(AuthGuard)
+    @UsePipes(new JoiObjectSchemaPipe(PatchMeRequestSchema))
+    @UseInterceptors(DuplicateKeyViolationInterceptor)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async patchMe(
+        @Headers(USER_ID) userId: string,
+        @Body() body: PatchMeRequestDto
+    ) {
+        this._logger.info('Patch me request received from user %s, body: %o', userId, body);
+
+        const result = await this._userService.patchUser(userId, body);
+
+        console.log('updat result', result);
+
+        this._logger.info('Patch me request completed from user %s, body: %o', userId, body);
     }
 
     // @Get()

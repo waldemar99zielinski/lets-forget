@@ -7,7 +7,7 @@ export interface GetOffersQueryDto {
     // title?: string;
     priceMax?: number;
 
-    date?: Date;
+    date: Date;
 
     //location
 
@@ -22,10 +22,10 @@ export interface GetOffersQueryDto {
 
 export const GetOffersQuerySchema = Joi.object<GetOffersQueryDto>({
     type: Joi.string(),
-    // title: Joi.string(),
+
     priceMax: Joi.number(),
 
-    date: Joi.date(),
+    date: Joi.date().required(),
 
     //location
 
@@ -39,7 +39,6 @@ export const GetOffersQuerySchema = Joi.object<GetOffersQueryDto>({
     .rename('price-max', 'priceMax')
     .or(
         'type',
-        'title',
         'priceMax',
         'date',
         'n',

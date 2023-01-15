@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Offer } from 'src/database/entities/offer/offer.entity';
 import { GetOffersQueryDto } from 'src/modules/offer/dto/GetOffersRequest.dto';
+import { getHoursFormat } from 'src/utils/time/getHourFormat';
 
 import { BaseRepository } from './base.repository';
 
@@ -36,6 +37,26 @@ export class OfferRepository extends BaseRepository<Offer> {
 
         if(query.city) {
             createQuery.leftJoinAndSelect('places', 'p', 'o.place_id = p.id AND p.city_id = :city', {city: query.city});
+        }
+
+        if(query.n && query.s && query.w && query.e) {
+
+            createQuery.andWhere('latitude BETWEEN :minLat AND :maxLat', {
+                minLat: query.s,
+                maxLat: query.n,
+            });
+
+            createQuery.andWhere('longitude BETWEEN :minLng AND :maxLng', {
+                minLng: query.w,
+                maxLng: query.e
+            });
+        }
+
+        if(query.date){
+            createQuery.andWhere('"starts_at" <= :date', {date: query.date});
+            createQuery.andWhere('("ends_at" >= :date OR "ends_at" = NULL)', {date: query.date});
+            createQuery.andWhere('("starts_at" <= :now OR "starts_at" = NULL)', {now: getHoursFormat(query.date)});
+            createQuery.andWhere('("ends_at" <= :now OR "ends_at" = NULL)', {now: getHoursFormat(query.date)});
         }
 
         return createQuery.getMany();

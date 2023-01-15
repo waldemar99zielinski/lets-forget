@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import axios from 'axios';
 
 import { PostOfferRequestDto } from '@lets-forget/backend/src/modules/offer/dto/PostOfferRequest.dto';
+import { PostPlaceRequestDto } from '../../src/modules/place/dto/PostPlaceRequest.dto';
 import { Offer, Currency, DaysOfTheWeek } from '../../src/database/entities/offer/offer.entity';
 
 import { baseUrlV1 } from '../config/url';
@@ -16,12 +17,12 @@ const offerUrl = baseUrlV1 + '/offer';
 interface CreateOfferProps {
     offer?: Partial<Omit<PostOfferRequestDto, 'placeId' | 'authorId'>>;
     placeId?: string;
-    // authorId?: string;
     offerTypeId?: string;
+    place?: Partial<PostPlaceRequestDto>
 }
 
 export const createTestOffer = async (props: CreateOfferProps) => {
-    const mockPlaceId = props.placeId || (await createTestPlace({})).id;
+    const mockPlaceId = (await createTestPlace(props.place || {})).id;
     const mockUser = await createActivatedUserWithToken({});
     const mockOfferType = props.offerTypeId || (await createOfferType({}));
 
