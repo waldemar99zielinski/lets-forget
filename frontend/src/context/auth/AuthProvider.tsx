@@ -14,6 +14,7 @@ export const AuthContext = createContext<AuthContextInterface>(null!);
 export const AuthProvider = (props: PropsWithChildren<unknown>) => {
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [isBootstraping, setIsBootstraping] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         setIsBootstraping(true);
@@ -43,6 +44,7 @@ export const AuthProvider = (props: PropsWithChildren<unknown>) => {
 
     const signOut = () => {
         window.localStorage.removeItem('lft');
+        bindAuthAxiosToken('');
         setIsSignedIn(false);
     };
 
@@ -50,7 +52,7 @@ export const AuthProvider = (props: PropsWithChildren<unknown>) => {
         value={{
             isSignedIn,
             signIn,
-            signOut
+            signOut,
         }}
     >
         {isBootstraping ? <BootstrapScreen /> : props.children}
