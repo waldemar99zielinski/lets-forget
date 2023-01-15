@@ -6,7 +6,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuthGuard } from 'src/context/guards/AuthGuard/useAuthGuard';
+import { useAuth } from 'src/context/auth/useAuth';
 
 interface UserMenuListProps {
     onItemClick?: () => void;
@@ -14,7 +14,7 @@ interface UserMenuListProps {
 
 export const UserMenuList = (props: UserMenuListProps) => {
     const navigate = useNavigate();
-    const { signOut } = useAuthGuard();
+    const { signOut } = useAuth();
 
     const handleAction = (action: () => void) => {
         if(props.onItemClick)

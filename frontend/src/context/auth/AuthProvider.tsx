@@ -3,15 +3,15 @@ import { BootstrapScreen } from 'src/screen/BootstrapScreen';
 import { signInApi } from 'src/api/authentication/authentication.api';
 import { bindAuthAxiosToken } from 'src/api/axios/authAxios';
 
-interface AuthGuardContextInterface {
+interface AuthContextInterface {
     isSignedIn: boolean;
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => void;
 }
 
-export const AuthGuardContext = createContext<AuthGuardContextInterface>(null!);
+export const AuthContext = createContext<AuthContextInterface>(null!);
 
-export const AuthGuardProvider = (props: PropsWithChildren<unknown>) => {
+export const AuthProvider = (props: PropsWithChildren<unknown>) => {
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [isBootstraping, setIsBootstraping] = useState(false);
 
@@ -46,7 +46,7 @@ export const AuthGuardProvider = (props: PropsWithChildren<unknown>) => {
         setIsSignedIn(false);
     };
 
-    return <AuthGuardContext.Provider 
+    return <AuthContext.Provider 
         value={{
             isSignedIn,
             signIn,
@@ -54,5 +54,5 @@ export const AuthGuardProvider = (props: PropsWithChildren<unknown>) => {
         }}
     >
         {isBootstraping ? <BootstrapScreen /> : props.children}
-    </AuthGuardContext.Provider>;
+    </AuthContext.Provider>;
 }

@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useAlert } from 'src/context/alerts/useAlert';
-import { useAuthGuard } from 'src/context/guards/AuthGuard/useAuthGuard';
+import { useAuth } from 'src/context/auth/useAuth';
 import { validationRegex } from 'src/utils/text-validation/regex';
 import { Logger } from 'src/utils/logger';
 
 export const SignInForm = () => {
     const {t} = useTranslation('authorization');
     const navigate = useNavigate();
-    const { signIn } = useAuthGuard();
+    const { signIn } = useAuth();
 
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
