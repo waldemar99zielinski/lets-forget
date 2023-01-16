@@ -24,4 +24,15 @@ export const createCountry = async (props: CreateCountryProps) => {
         await c.destroy();
 
     return countryName;
+};
+
+export const truncateCountriesTable = async () => {
+
+    const c = await DB().initialize();
+
+    await c.query(`
+        TRUNCATE TABLE "countries" CASCADE;
+    `);
+
+    await c.destroy();
 }

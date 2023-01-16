@@ -1,13 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum DaysOfTheWeek {
-    monday = 0,
+    sunday = 0,
+    monday,
     tuesday,
     wednesday,
     thursday,
     friday,
     saturday,
-    sunday
 }
 
 export enum Currency {

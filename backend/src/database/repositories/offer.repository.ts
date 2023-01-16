@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Offer } from 'src/database/entities/offer/offer.entity';
+import { Offer, DaysOfTheWeek } from 'src/database/entities/offer/offer.entity';
 import { GetOffersQueryDto } from 'src/modules/offer/dto/GetOffersRequest.dto';
 import { getHoursFormat } from 'src/utils/time/getHourFormat';
 
@@ -25,12 +25,16 @@ export class OfferRepository extends BaseRepository<Offer> {
     public async getByQuery(query: GetOffersQueryDto): Promise<Offer[]> {
         const createQuery = this._offerRepository.createQueryBuilder('o');
 
+        if(query.placeId) {
+            createQuery.andWhere('"place_id" = :placeId', {placeId: query.placeId});
+        }
+
         if(query.type) {
             createQuery.andWhere('"type_id" = :type', {type: query.type});
         }
 
         if(query.priceMax) {
-            createQuery.andWhere('"price" <= :price', {price: query.priceMax});
+            createQuery.andWhere('"price" <= :price or "price = NULL', {price: query.priceMax});
         }
 
         //location
@@ -53,11 +57,15 @@ export class OfferRepository extends BaseRepository<Offer> {
         }
 
         if(query.date){
+            console.log('query date', query.date, query.date.getDay())
             createQuery.andWhere('"starts_at" <= :date', {date: query.date});
             createQuery.andWhere('("ends_at" >= :date OR "ends_at" = NULL)', {date: query.date});
-            createQuery.andWhere('("starts_at" <= :now OR "starts_at" = NULL)', {now: getHoursFormat(query.date)});
-            createQuery.andWhere('("ends_at" <= :now OR "ends_at" = NULL)', {now: getHoursFormat(query.date)});
+            createQuery.andWhere('("start_time" <= :now OR "start_time" = NULL)', {now: getHoursFormat(query.date)});
+            createQuery.andWhere('("end_time" >= :now OR "end_time" = NULL)', {now: getHoursFormat(query.date)});
+            createQuery.andWhere(':day = any(days_of_the_week)', {day: DaysOfTheWeek[query.date.getDay()]})
         }
+
+        console.log(createQuery.getQueryAndParameters())
 
         return createQuery.getMany();
     }
