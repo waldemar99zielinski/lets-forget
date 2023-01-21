@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 
 import { latitudeSchema, longitudeSchema } from 'src/common/validation/coordinates';
@@ -20,6 +21,7 @@ export interface GetOffersQueryDto {
 
     //pagination
     page?: string;
+    size?: number;
 }
 
 export const GetOffersQuerySchema = Joi.object<GetOffersQueryDto>({
@@ -38,7 +40,8 @@ export const GetOffersQuerySchema = Joi.object<GetOffersQueryDto>({
     e: longitudeSchema.greater(Joi.ref('w')),
 
     //pagination by id
-    page: Joi.string().uuid({version: 'uuidv4'})
+    page: Joi.string().uuid({version: 'uuidv4'}),
+    size: Joi.number().integer()
 })
     .rename('place-id', 'placeId')
     .rename('price-max', 'priceMax')

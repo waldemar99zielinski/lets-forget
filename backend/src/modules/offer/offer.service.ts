@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { Offer, DaysOfTheWeek } from 'src/database/entities/offer/offer.entity';
 import { OfferRepository } from 'src/database/repositories/offer.repository';
@@ -12,7 +13,9 @@ export class OfferService {
 
     constructor(
         private readonly _offerRepository: OfferRepository,
-        private readonly _loggerService: LoggerService
+        private readonly _loggerService: LoggerService,
+        private readonly _config: ConfigService,
+
     ) {
         this._logger = _loggerService.getLoggerWithLabel(OfferService.name);
     }
@@ -37,7 +40,12 @@ export class OfferService {
     }
 
     public async getOffersByQuery(query: GetOffersQueryDto) {
-        return this._offerRepository.getByQuery(query);
+        const maxPageSize = this._config.getOrThrow('query.maxPageSize');
+        const pageSize = query.size ? Math.min(maxPageSize, query.size) : maxPageSize;
+
+        const formatedQuery: GetOffersQueryDto = {...query, size: pageSize};
+
+        return this._offerRepository.getByQuery(formatedQuery);
     }
 
     public async getOffer(id: string) {

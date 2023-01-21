@@ -7,14 +7,12 @@ import { GetOffersQueryDto } from 'src/modules/offer/dto/GetOffersRequest.dto';
 import { getHoursFormat } from 'src/utils/time/getHourFormat';
 
 import { BaseRepository } from './base.repository';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OfferRepository extends BaseRepository<Offer> {
     constructor (
         @InjectRepository(Offer)
         private readonly _offerRepository: Repository<Offer>,
-        private readonly _config: ConfigService
     ) {
         super(_offerRepository);
     }
@@ -69,7 +67,7 @@ export class OfferRepository extends BaseRepository<Offer> {
         // pagination
 
         createQuery.orderBy('id', 'ASC');
-        createQuery.limit(this._config.get('query.paginationSize'));
+        createQuery.limit(query.size);
 
         if(query.page)
             createQuery.andWhere('"id" > :id', {id: query.page});
