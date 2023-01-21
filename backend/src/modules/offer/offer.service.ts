@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Offer } from 'src/database/entities/offer/offer.entity';
+import { Offer, DaysOfTheWeek } from 'src/database/entities/offer/offer.entity';
 import { OfferRepository } from 'src/database/repositories/offer.repository';
 import { LoggerInterface, LoggerService } from 'src/utils/logger';
 
@@ -17,7 +17,22 @@ export class OfferService {
         this._logger = _loggerService.getLoggerWithLabel(OfferService.name);
     }
 
+    // TODO test it :)
     public async createOffer(newOffer: Omit<Offer, 'id' | 'startsAt' | 'createdAt' | 'updatedAt'>) {
+        // if offer passes midnight make sure that next day is also added
+        if(newOffer.daysOfTheWeek && newOffer.startTime && newOffer.endTime && newOffer.startTime >= newOffer.endTime) {
+            const daysOfTheWeek = newOffer.daysOfTheWeek;
+            const withFollowingDays: DaysOfTheWeek[] = daysOfTheWeek;
+
+            daysOfTheWeek.forEach((day) => {
+                withFollowingDays.push(DaysOfTheWeek[DaysOfTheWeek[(day+1) % 7]])
+            });
+
+            const uniqueDayOfTheWeek = new Set<DaysOfTheWeek>(withFollowingDays);
+            
+            newOffer.daysOfTheWeek = Array.from(uniqueDayOfTheWeek);
+        }
+
         return this._offerRepository.create(newOffer);
     }
 

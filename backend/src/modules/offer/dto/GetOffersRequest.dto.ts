@@ -17,6 +17,9 @@ export interface GetOffersQueryDto {
     s?: number; // latitude
     w?: number; // longitude
     e?: number; // longitude
+
+    //pagination
+    page?: string;
 }
 
 export const GetOffersQuerySchema = Joi.object<GetOffersQueryDto>({
@@ -32,7 +35,10 @@ export const GetOffersQuerySchema = Joi.object<GetOffersQueryDto>({
     n: latitudeSchema.greater(Joi.ref('s')),
     s: latitudeSchema,
     w: longitudeSchema,
-    e: longitudeSchema.greater(Joi.ref('w'))
+    e: longitudeSchema.greater(Joi.ref('w')),
+
+    //pagination by id
+    page: Joi.string().uuid({version: 'uuidv4'})
 })
     .rename('place-id', 'placeId')
     .rename('price-max', 'priceMax')
