@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 
-import { Currency, DaysOfTheWeek } from 'src/database/entities/offer/offer.entity';
+import { Currency } from 'src/database/entities/offer/offer.entity';
 import { hourSchema } from 'src/common/validation/hour';
 
 export interface PostOfferRequestDto {
@@ -15,11 +15,6 @@ export interface PostOfferRequestDto {
 
     startsAt?: Date,
     endsAt?: Date
-
-    daysOfTheWeek?: DaysOfTheWeek[],
-    
-    startTime?: string;
-    endTime?: string;
 }
 
 export const PostOfferRequestSchema = Joi.object<PostOfferRequestDto>({
@@ -38,13 +33,5 @@ export const PostOfferRequestSchema = Joi.object<PostOfferRequestDto>({
 
     startsAt: Joi.date(),
     endsAt: Joi.date(),
-
-    daysOfTheWeek: Joi.array()
-        .items(Joi.string().valid(...Object.keys(DaysOfTheWeek)))
-        .unique(),
-
-    startTime: hourSchema,
-    endTime: hourSchema
 })
-    .and('price', 'currency')
-    .and('startTime', 'endTime')
+    .and('price', 'currency');

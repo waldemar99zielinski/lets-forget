@@ -8,6 +8,7 @@ import { CityModule } from './modules/city/city.module';
 import { CountryModule } from './modules/country/country.module';
 import { OfferModule } from './modules/offer/offer.module';
 import { OfferTypeModule } from './modules/offer-type/offer-type.module';
+import { OfferScheduleModule } from './modules/offer-schedule/offerSchedule.module';
 import { PlaceModule } from './modules/place/place.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -25,6 +26,7 @@ import { LoggerModule } from './utils/logger';
 		CountryModule,
 		OfferModule,
 		OfferTypeModule,
+		OfferScheduleModule,
 		PlaceModule,
 		UserModule,
 

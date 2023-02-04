@@ -2,11 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Offer, DaysOfTheWeek } from 'src/database/entities/offer/offer.entity';
+import { Offer } from 'src/database/entities/offer/offer.entity';
+import { DaysOfTheWeek } from 'src/database/entities/offer-schedule/offerSchedule.entity';
 import { GetOffersQueryDto } from 'src/modules/offer/dto/GetOffersRequest.dto';
 import { getHoursFormat } from 'src/utils/time/getHourFormat';
 
 import { BaseRepository } from './base.repository';
+
+export interface OfferRepositoryGetByIdConfig {
+    withPlace?: boolean;
+    withSchedule?: boolean;
+}
 
 @Injectable()
 export class OfferRepository extends BaseRepository<Offer> {
@@ -22,6 +28,24 @@ export class OfferRepository extends BaseRepository<Offer> {
         return response.identifiers[0].id;
     }
 
+    public async getById(id: string, options: OfferRepositoryGetByIdConfig = {
+        withPlace: false,
+        withSchedule: false
+    }) {
+
+        const createQuery = this._offerRepository.createQueryBuilder('o');
+
+        createQuery.andWhere('o.id = :id', {id});
+
+        if(options.withPlace)
+            createQuery.leftJoinAndSelect('o.place', 'place');
+        
+        if(options.withSchedule)
+            createQuery.leftJoinAndSelect('offer_schedules', 'os', 'os.offer_id = o.id');
+
+        return createQuery.getOne();
+    }
+
     public async getByQuery(query: GetOffersQueryDto): Promise<Offer[]> {
         const createQuery = this._offerRepository.createQueryBuilder('o');
 
@@ -35,13 +59,15 @@ export class OfferRepository extends BaseRepository<Offer> {
 
         //location
 
+        //TODO pomyśl nad tym tej
         if(query.city) {
-            createQuery.leftJoinAndSelect('places', 'p', 'o.place_id = p.id AND p.city_id = :city', {city: query.city});
+            createQuery.leftJoinAndSelect('o.place', 'place', 'place.city_id = :city', {city: query.city});
+            // createQuery.leftJoinAndSelect('places', 'p', 'o.place_id = p.id AND p.city_id = :city', {city: query.city});
         }
 
-        // if(query.placeId) {
-        //     createQuery.andWhere('"place_id" = :placeId', {placeId: query.placeId});
-        // }
+        if(query.placeId) {
+            createQuery.andWhere('"place_id" = :placeId', {placeId: query.placeId});
+        }
 
         if(query.n && query.s && query.w && query.e) {
 
@@ -61,19 +87,22 @@ export class OfferRepository extends BaseRepository<Offer> {
             createQuery.andWhere('"starts_at" <= :date', {date: query.date});
             createQuery.andWhere('("ends_at" >= :date OR "ends_at" = NULL)', {date: query.date});
             createQuery.andWhere('(("start_time" = NULL AND "end_time" = NULL) OR ("start_time" <= "end_time" AND "start_time" <= :now AND "end_time" >= :now) OR ("start_time" >= "end_time" AND ("start_time" <= :now OR "end_time" >= :now)))', {now: getHoursFormat(query.date)});
-            createQuery.andWhere(':day = any(days_of_the_week)', {day: DaysOfTheWeek[query.date.getDay()]})
+            createQuery.andWhere(':day = any(days_of_the_week)', {day: DaysOfTheWeek[query.date.getDay()]});
+            createQuery.andWhere(subQ => {
+                subQ.where('"start_time" = NULL AND "end_time" = NULL')
+                subQ.orWhere('"start_time" <= "end_time" AND "start_time" <= :now AND "end_time" >= :now AND :day = any(days_of_the_week)')
+                subQ.orWhere('"start_time" >= "end_time" AND ("start_time" <= :now OR "end_time" >= :now)')
+            })
         }
 
         // pagination
 
-        createQuery.orderBy('id', 'ASC');
+        if(query.page)
+            createQuery.andWhere('o.id > :id', {id: query.page});
+
+        createQuery.orderBy('o.id', 'ASC');
         createQuery.limit(query.size);
 
-        if(query.page)
-            createQuery.andWhere('"id" > :id', {id: query.page});
-
-        console.log(createQuery.getQueryAndParameters())
-
-        return createQuery.getRawMany();
+        return createQuery.getMany();
     }
 }

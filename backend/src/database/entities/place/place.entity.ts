@@ -2,7 +2,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('places')
 export class Place {
-    
     @PrimaryGeneratedColumn('uuid')
     id: string;
 

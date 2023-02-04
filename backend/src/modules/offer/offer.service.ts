@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { Offer, DaysOfTheWeek } from 'src/database/entities/offer/offer.entity';
+import { Offer } from 'src/database/entities/offer/offer.entity';
 import { OfferRepository } from 'src/database/repositories/offer.repository';
 import { LoggerInterface, LoggerService } from 'src/utils/logger';
 
@@ -10,6 +10,7 @@ import { GetOffersQueryDto } from './dto/GetOffersRequest.dto';
 @Injectable()
 export class OfferService {
     private readonly _logger: LoggerInterface;
+    private readonly _maxPageSize: number;
 
     constructor(
         private readonly _offerRepository: OfferRepository,
@@ -18,30 +19,15 @@ export class OfferService {
 
     ) {
         this._logger = _loggerService.getLoggerWithLabel(OfferService.name);
+        this._maxPageSize = this._config.getOrThrow('query.maxPageSize');
     }
 
-    // TODO test it :)
     public async createOffer(newOffer: Omit<Offer, 'id' | 'startsAt' | 'createdAt' | 'updatedAt'>) {
-        // if offer passes midnight make sure that next day is also added
-        if(newOffer.daysOfTheWeek && newOffer.startTime && newOffer.endTime && newOffer.startTime >= newOffer.endTime) {
-            const daysOfTheWeek = newOffer.daysOfTheWeek;
-            const withFollowingDays: DaysOfTheWeek[] = daysOfTheWeek;
-
-            daysOfTheWeek.forEach((day) => {
-                withFollowingDays.push(DaysOfTheWeek[DaysOfTheWeek[(day+1) % 7]])
-            });
-
-            const uniqueDayOfTheWeek = new Set<DaysOfTheWeek>(withFollowingDays);
-            
-            newOffer.daysOfTheWeek = Array.from(uniqueDayOfTheWeek);
-        }
-
         return this._offerRepository.create(newOffer);
     }
 
     public async getOffersByQuery(query: GetOffersQueryDto) {
-        const maxPageSize = this._config.getOrThrow('query.maxPageSize');
-        const pageSize = query.size ? Math.min(maxPageSize, query.size) : maxPageSize;
+        const pageSize = query.size ? Math.min(this._maxPageSize, query.size) : this._maxPageSize;
 
         const formatedQuery: GetOffersQueryDto = {...query, size: pageSize};
 
@@ -49,7 +35,7 @@ export class OfferService {
     }
 
     public async getOffer(id: string) {
-        return this._offerRepository.findOneById(id);
+        return this._offerRepository.getById(id);
     }
 
     public async deleteOffer(id: string) {

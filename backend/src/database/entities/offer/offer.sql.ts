@@ -1,8 +1,6 @@
 export const createOffersTable = `
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-    CREATE TYPE days_of_the_week_enum AS ENUM('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
-
     CREATE TYPE currency_enum AS ENUM('PLN');
 
     CREATE TABLE offers (
@@ -19,11 +17,6 @@ export const createOffersTable = `
 
         starts_at           timestamptz NOT NULL DEFAULT NOW(),
         ends_at             timestamptz,
-
-        days_of_the_week    days_of_the_week_enum[],
-
-        start_time          time,
-        end_time            time,
 
         created_at          timestamptz NOT NULL DEFAULT NOW(),
         updated_at          timestamptz NOT NULL DEFAULT NOW(),

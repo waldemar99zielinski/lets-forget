@@ -1,14 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum DaysOfTheWeek {
-    sunday = 0,
-    monday,
-    tuesday,
-    wednesday,
-    thursday,
-    friday,
-    saturday,
-}
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Place } from 'src/database/entities/place/place.entity';
+import { OfferSchedule } from 'src/database/entities/offer-schedule/offerSchedule.entity';
 
 export enum Currency {
     PLN = 'PLN'
@@ -21,6 +13,10 @@ export class Offer {
 
     @Column({name: 'place_id', type: 'uuid'})
     placeId: string;
+
+    @ManyToOne(() => Place, place => place.id)
+    @JoinColumn({name: 'place_id'})
+    place?: Place;
 
     @Column({name: 'author_id', type: 'uuid'})
     authorId: string;
@@ -46,18 +42,14 @@ export class Offer {
     @Column({name: 'ends_at', type: 'timestamptz'})
     endsAt?: Date;
 
-    @Column({name: 'days_of_the_week', type: 'enum', enum: DaysOfTheWeek, array: true})
-    daysOfTheWeek?: DaysOfTheWeek[];
-
-    @Column({name: 'start_time', type: 'time'})
-    startTime?: string;
-
-    @Column({name: 'end_time', type: 'time'})
-    endTime?: string;
-
     @Column({name: 'created_at', type: 'timestamptz'})
     createdAt: Date;
 
     @Column({name: 'updated_at', type: 'timestamptz'})
     updatedAt: Date;
+
+    // for typeorm
+    @OneToMany(() => OfferSchedule, offerSchedule => offerSchedule['offer_id'])
+    @JoinColumn({name: 'offer_id'})
+    schedules?: OfferSchedule[];
 }

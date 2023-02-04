@@ -14,7 +14,6 @@ import { PostOfferRequestDto, PostOfferRequestSchema } from './dto/PostOfferRequ
 @Controller('api/v1/offer')
 export class OfferControllerV1 {
     private readonly _logger: LoggerInterface;
-    private readonly _max
 
     constructor(
         private readonly _offerService: OfferService,

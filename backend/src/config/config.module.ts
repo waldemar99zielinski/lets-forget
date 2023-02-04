@@ -6,6 +6,7 @@ import DatabaseConfig from './database.config';
 import JWTConfig from './jwt.config';
 import MailerConfig from './mailer.config';
 import WebappConfig from './webapp.config';
+import QueryConfig from './query.cofig';
 
 @Module({
     imports: [
@@ -16,7 +17,8 @@ import WebappConfig from './webapp.config';
                 DatabaseConfig,
                 JWTConfig,
                 MailerConfig,
-                WebappConfig
+                WebappConfig,
+                QueryConfig
             ],
         }),
     ],
