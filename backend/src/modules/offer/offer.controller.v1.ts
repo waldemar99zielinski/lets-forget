@@ -46,7 +46,7 @@ export class OfferControllerV1 {
     public async getOfferById(@Param('id', new ParseUUIDPipe({version: '4'})) id: string) {
         this._logger.info('Get request received for id %s', id);
 
-        const offer = await this._offerService.getOffer(id);
+        const offer = await this._offerService.getOffer(id, {withPlace: true, withSchedule: true});
 
         if(!offer) {
             this._logger.error('Get request cannot find offer with id %s', id);

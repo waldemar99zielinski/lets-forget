@@ -19,12 +19,15 @@ interface CreateTestOfferScheduleProps {
 export const createTestOfferSchedule = async (props: CreateTestOfferScheduleProps) => {
     const {numberOfSchedulesToCreate = 1} = props;
 
-    let daysOfTheWeekArray = Object.values(DaysOfTheWeek) as DaysOfTheWeek[];
+    let daysOfTheWeekArray = Object.keys(DaysOfTheWeek).slice(7) as unknown as DaysOfTheWeek[];
+
 
     const create = async () => {
         for(let i = 0; i < numberOfSchedulesToCreate; i++) {
 
-            const selectedDay = daysOfTheWeekArray[Number(faker.random.numeric())%7];
+            const random = Math.floor(Math.random() * daysOfTheWeekArray.length);
+
+            const selectedDay = daysOfTheWeekArray[random];
 
             daysOfTheWeekArray = daysOfTheWeekArray.filter(day => day !== selectedDay);
 

@@ -16,6 +16,11 @@ export class OfferSchedule {
     @PrimaryColumn({name: 'offer_id', type: 'uuid'})
     offerId: string;
 
+    // for typeorm
+    @ManyToOne(() => Offer, offer => offer.schedules)
+    @JoinColumn({name: 'offer_id'})
+    offer?: Offer;
+
     @PrimaryColumn({name: 'day_of_the_week', type: 'enum', enum: DaysOfTheWeek})
     dayOfTheWeek: DaysOfTheWeek;
 
@@ -24,8 +29,4 @@ export class OfferSchedule {
 
     @PrimaryColumn({name: 'end_time', type: 'time'})
     endTime: string;
-
-    // // for typeorm
-    // @ManyToOne(() => Offer, offer => offer.schedules)
-    // offer?: Offer;
 }

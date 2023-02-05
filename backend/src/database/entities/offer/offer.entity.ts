@@ -49,7 +49,6 @@ export class Offer {
     updatedAt: Date;
 
     // for typeorm
-    @OneToMany(() => OfferSchedule, offerSchedule => offerSchedule['offer_id'])
-    @JoinColumn({name: 'offer_id'})
+    @OneToMany(() => OfferSchedule, offerSchedule => offerSchedule.offer, {})
     schedules?: OfferSchedule[];
 }

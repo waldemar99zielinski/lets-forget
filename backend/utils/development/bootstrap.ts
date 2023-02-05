@@ -66,9 +66,11 @@ const bootstrap = async () => {
     const createOffersSchedules = async () => {
 
         for(let i = 0; i < NUMBER_OF_OFFERS / 2; i++) {
-            const offer = createdOffers[Number(faker.random.numeric())%(createdOffers.length)];
+            const random = Math.floor(Math.random() * createdOffers.length);
 
-            await createTestOfferSchedule({offerId: offer.offer.id, token: offer.token});
+            const offer = createdOffers[random];
+
+            await createTestOfferSchedule({offerId: offer.offer.id, token: offer.token, numberOfSchedulesToCreate: 3});
         }
     }
     await createOffersSchedules();

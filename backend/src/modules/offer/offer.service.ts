@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Offer } from 'src/database/entities/offer/offer.entity';
-import { OfferRepository } from 'src/database/repositories/offer.repository';
+import { OfferRepository, OfferRepositoryGetByIdConfig } from 'src/database/repositories/offer.repository';
 import { LoggerInterface, LoggerService } from 'src/utils/logger';
 
 import { GetOffersQueryDto } from './dto/GetOffersRequest.dto';
@@ -34,8 +34,8 @@ export class OfferService {
         return this._offerRepository.getByQuery(formatedQuery);
     }
 
-    public async getOffer(id: string) {
-        return this._offerRepository.getById(id);
+    public async getOffer(id: string, config?: OfferRepositoryGetByIdConfig) {
+        return this._offerRepository.getById(id, config);
     }
 
     public async deleteOffer(id: string) {

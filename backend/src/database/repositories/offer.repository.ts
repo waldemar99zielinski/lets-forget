@@ -39,9 +39,11 @@ export class OfferRepository extends BaseRepository<Offer> {
 
         if(options.withPlace)
             createQuery.leftJoinAndSelect('o.place', 'place');
-        
+
         if(options.withSchedule)
-            createQuery.leftJoinAndSelect('offer_schedules', 'os', 'os.offer_id = o.id');
+            createQuery.leftJoinAndSelect('o.schedules', 'schedules');
+
+        console.log(createQuery.getSql())
 
         return createQuery.getOne();
     }
@@ -86,13 +88,18 @@ export class OfferRepository extends BaseRepository<Offer> {
             console.log('query date', query.date, query.date.getDay())
             createQuery.andWhere('"starts_at" <= :date', {date: query.date});
             createQuery.andWhere('("ends_at" >= :date OR "ends_at" = NULL)', {date: query.date});
-            createQuery.andWhere('(("start_time" = NULL AND "end_time" = NULL) OR ("start_time" <= "end_time" AND "start_time" <= :now AND "end_time" >= :now) OR ("start_time" >= "end_time" AND ("start_time" <= :now OR "end_time" >= :now)))', {now: getHoursFormat(query.date)});
-            createQuery.andWhere(':day = any(days_of_the_week)', {day: DaysOfTheWeek[query.date.getDay()]});
+            // createQuery.andWhere('(("start_time" = NULL AND "end_time" = NULL) OR ("start_time" <= "end_time" AND "start_time" <= :now AND "end_time" >= :now) OR ("start_time" >= "end_time" AND ("start_time" <= :now OR "end_time" >= :now)))', {now: getHoursFormat(query.date)});
+            // createQuery.andWhere(':day = any(days_of_the_week)', {day: DaysOfTheWeek[query.date.getDay()]});
+            // createQuery.andWhere(subQ => {
+            //     subQ.where('"start_time" = NULL AND "end_time" = NULL')
+            //     subQ.orWhere('"start_time" <= "end_time" AND "start_time" <= :now AND "end_time" >= :now AND :day = any(days_of_the_week)')
+            //     subQ.orWhere('"start_time" >= "end_time" AND ("start_time" <= :now OR "end_time" >= :now)')
+            // })
+            createQuery.leftJoinAndSelect('o.schedules', 'schedules');
             createQuery.andWhere(subQ => {
-                subQ.where('"start_time" = NULL AND "end_time" = NULL')
-                subQ.orWhere('"start_time" <= "end_time" AND "start_time" <= :now AND "end_time" >= :now AND :day = any(days_of_the_week)')
-                subQ.orWhere('"start_time" >= "end_time" AND ("start_time" <= :now OR "end_time" >= :now)')
-            })
+                subQ.where('schedules.offer_id IS NULL')
+                subQ.orWhere('(schedules.day_of_the_week = :day AND schedules.start_time <= :time AND schedules.end_time > :time)', {day: DaysOfTheWeek[query.date.getDay()], time: getHoursFormat(query.date)})
+            });
         }
 
         // pagination
@@ -102,6 +109,9 @@ export class OfferRepository extends BaseRepository<Offer> {
 
         createQuery.orderBy('o.id', 'ASC');
         createQuery.limit(query.size);
+
+        console.log('query: ', createQuery.getQueryAndParameters())
+        console.log('day:', DaysOfTheWeek[query.date.getDay()], query.date.getDay())
 
         return createQuery.getMany();
     }
