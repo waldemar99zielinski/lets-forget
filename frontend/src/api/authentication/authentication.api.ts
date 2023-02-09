@@ -39,3 +39,9 @@ export const signInApi = async (email: string, password: string) => {
         password
     });
 };
+
+export const googleAuthApi = async (token: string) => {
+    return axios.post<SignInResponseData>(authenticationUrl + '/google', {
+        token
+    })
+}

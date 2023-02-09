@@ -16,5 +16,6 @@ export default {
     signUpErrorAlert: 'Something went wrong during sign up, please try again later',
     signInError: 'Something went wrong during sign in, please try again later',
     emailActivationErrorAlert: 'Something went wrong while activation your email, please try again later.',
-    emailActivationSuccesAlert: 'Your email has been successfully activated, sing in.'
+    emailActivationSuccesAlert: 'Your email has been successfully activated, sing in.',
+    or: 'or'
 }

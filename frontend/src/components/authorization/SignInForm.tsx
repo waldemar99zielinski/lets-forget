@@ -10,6 +10,8 @@ import { useAuth } from 'src/context/auth/useAuth';
 import { validationRegex } from 'src/utils/text-validation/regex';
 import { Logger } from 'src/utils/logger';
 
+import { GoogleAuthButton } from './GoogleAuthButton';
+
 export const SignInForm = () => {
     const {t} = useTranslation('authorization');
     const navigate = useNavigate();

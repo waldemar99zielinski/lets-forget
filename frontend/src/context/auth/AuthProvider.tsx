@@ -1,11 +1,13 @@
 import { createContext, useState, PropsWithChildren, useEffect } from 'react';
 import { BootstrapScreen } from 'src/screen/BootstrapScreen';
-import { signInApi } from 'src/api/authentication/authentication.api';
+import { googleAuthApi, signInApi } from 'src/api/authentication/authentication.api';
 import { bindAuthAxiosToken } from 'src/api/axios/authAxios';
+import { LocalStorage } from 'src/utils/localStorage/LocalStorage';
 
 interface AuthContextInterface {
     isSignedIn: boolean;
     signIn: (email: string, password: string) => Promise<void>;
+    googleAuth: (token: string) => Promise<void>;
     signOut: () => void;
 }
 
@@ -19,7 +21,7 @@ export const AuthProvider = (props: PropsWithChildren<unknown>) => {
     useEffect(() => {
         setIsBootstraping(true);
 
-        const accessToken = window.localStorage.getItem('lft');
+        const accessToken = LocalStorage.getItem('accessToken');
 
         if(accessToken) {
             bindAuthAxiosToken(accessToken);
@@ -33,7 +35,7 @@ export const AuthProvider = (props: PropsWithChildren<unknown>) => {
         try {
             const response = await signInApi(email, password);
 
-            window.localStorage.setItem('lft', response.data.token);
+            LocalStorage.setItem('accessToken', response.data.token);
             bindAuthAxiosToken(response.data.token);
             setIsSignedIn(true);
         }
@@ -42,8 +44,20 @@ export const AuthProvider = (props: PropsWithChildren<unknown>) => {
         }
     };
 
+    const googleAuth = async (token: string) => {
+        try {
+            const response = await googleAuthApi(token);
+
+            LocalStorage.setItem('accessToken', response.data.token);
+            bindAuthAxiosToken(response.data.token);
+            setIsSignedIn(true);
+        } catch(error) {
+            throw error;
+        }
+    }
+
     const signOut = () => {
-        window.localStorage.removeItem('lft');
+        LocalStorage.removeItem('accessToken');
         bindAuthAxiosToken('');
         setIsSignedIn(false);
     };
@@ -52,6 +66,7 @@ export const AuthProvider = (props: PropsWithChildren<unknown>) => {
         value={{
             isSignedIn,
             signIn,
+            googleAuth,
             signOut,
         }}
     >

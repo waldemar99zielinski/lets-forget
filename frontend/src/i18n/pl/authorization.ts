@@ -16,5 +16,6 @@ export default {
     signUpErrorAlert: 'Rejestracja nie powiodła się, spróbuj ponownie później',
     signInError: 'Logowanie się nie powiodło, spróbuj ponownie później',
     emailActivationErrorAlert: 'Weryfikacja adresu email nie powiodła się, spróbuj ponownie później',
-    emailActivationSuccesAlert: 'Weryfikacja adresu email powiodła się'
+    emailActivationSuccesAlert: 'Weryfikacja adresu email powiodła się',
+    or: 'lub'
 }
