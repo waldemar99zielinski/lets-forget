@@ -34,7 +34,7 @@ export class OfferControllerV1 {
 
         const offers = await this._offerService.getOffersByQuery(query);
 
-        console.log('offers', offers);
+        // console.log('offers', offers);
 
         this._logger.info('Get request completed with query %o', query);
 

@@ -20,6 +20,18 @@ export class UserService {
         return this._userRepository.create(userToCreate);
     }
 
+    public async createUserGoogle(user: Pick<User, 'email'>) {
+        const userToCreate = {
+            email: user.email,
+            isEmailConfirmed: true,
+            passwordHash: null,
+            passwordSalt: null,
+            authStrategy: AuthStrategy.google
+        } as User;
+
+        return this._userRepository.create(userToCreate);
+    }
+
     // public async getUsers() {
     //     return this._userRepository.findAll();
     // }

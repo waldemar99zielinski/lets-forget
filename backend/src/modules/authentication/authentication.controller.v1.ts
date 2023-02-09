@@ -14,19 +14,20 @@ import { UserService } from 'src/modules/user/user.service';
 import { JWTService } from 'src/utils/jwt/jwt.service';
 import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
 import { PostgresErrorCodes } from 'src/utils/errors/postgresErrorCodes';
-
-import { AuthenticationService } from './authentication.service';
-
-// import { GoogleAuthenticationService } from './google.authentication.service';
-
-import { SignUpRequestDto, SignUpRequestSchema } from './dto/SignUpRequest.dto';
-import { SignInRequestDto, SignInRequestSchema } from './dto/SignInRequest.dto';
 import { AuthStrategy } from 'src/database/entities/user/user.entity';
 import { MailerService } from 'src/modules/mailer/mailer.service';
+
+import { AuthenticationService } from './authentication.service';
+import { GoogleAuthenticationService } from './google.authentication.service';
+
+import { SignUpRequestDto, SignUpRequestSchema } from './dto/SignUpRequest.dto';
+import { SignInResponse } from './dto/SignInResponse.dto';
+import { SignInRequestDto, SignInRequestSchema } from './dto/SignInRequest.dto';
 import { ActivateEmailRequestDto, ActivateEmailRequestSchema } from './dto/ActivateEmailRequest.dto';
+import { GoogleAuthRequestDto, GoogleAuthRequestSchema } from './dto/GoogleAuthRequest.dto';
 
 @Controller('api/v1/authentication')
-export class AuthenticationController {
+export class AuthenticationControllerV1 {
     private readonly _logger: LoggerInterface
     private readonly _webappBaseUrl: string;
 
@@ -37,9 +38,9 @@ export class AuthenticationController {
         private readonly _jwtService: JWTService,
         private readonly _mailerService: MailerService,
         private readonly _configService: ConfigService,
-        // private readonly _googleAuthenticationService: GoogleAuthenticationService
+        private readonly _googleAuthenticationService: GoogleAuthenticationService
     ) {
-        this._logger = this._loggerService.getLoggerWithLabel(AuthenticationController.name);
+        this._logger = this._loggerService.getLoggerWithLabel(AuthenticationControllerV1.name);
         this._webappBaseUrl = this._configService.get('webapp.url')
     }
 
@@ -112,7 +113,7 @@ export class AuthenticationController {
     @Post('/signin')
     @HttpCode(HttpStatus.OK)
     @UsePipes(new JoiObjectSchemaPipe(SignInRequestSchema))
-    public async signin(@Body() body: SignInRequestDto) {
+    public async signin(@Body() body: SignInRequestDto): Promise<SignInResponse> {
       
         this._logger.info('Signin request received for user with email %s', body.email);
 
@@ -145,32 +146,34 @@ export class AuthenticationController {
     }
 
     
-    // @Post('/google')
-    // @HttpStatus(HttpStatus.OK)
-    // public async googleAuth(@Body() request: GoogleAuthRequestDto, @Res() res: Response) {
+    @Post('/google')
+    @HttpCode(HttpStatus.OK)
+    @UsePipes(new JoiObjectSchemaPipe(GoogleAuthRequestSchema))
+    public async googleAuth(@Body() request: GoogleAuthRequestDto): Promise<SignInResponse>  {
 
-    //     this._logger.info('googleAuth request received with request %o', request);
+        this._logger.info('googleAuth request received');
 
-    //     const retrievedUserFromGoogle = await this._googleAuthenticationService.getGoogleAuthUserData(request.token);
+        const retrievedUserFromGoogle = await this._googleAuthenticationService.getGoogleAuthUserData(request.token);
 
-    //     const databaseUser = await this._userService.getUserByEmailAndAuthStategy(retrievedUserFromGoogle.email, AuthStrategy.google);
-    //     let userId = databaseUser ? databaseUser.id : null;
+        let databaseUser = await this._userService.getUserByEmailAndAuthStategy(retrievedUserFromGoogle.email, AuthStrategy.google);
 
-    //     // user not present in database
-    //     if(!userId)
-    //         userId = await this._userService.createUser(retrievedUserFromGoogle as User);
+        // user not present in database
+        if(!databaseUser) {
+            await this._userService.createUserGoogle({email: retrievedUserFromGoogle.email});
+            databaseUser = await this._userService.getUserByEmailAndAuthStategy(retrievedUserFromGoogle.email, AuthStrategy.google);
+        }
 
-    //     const token = await this._authenticationService.signJWT(userId);
+        const token = await this._jwtService.signJWTAccess(databaseUser.id);
 
-    //     const userProto: UserProtoDto = {
-    //         id: userId,
-    //         email: retrievedUserFromGoogle.email,
-    //         firstName: retrievedUserFromGoogle.firstName,
-    //         lastName: retrievedUserFromGoogle.lastName,
-    //     };
+        this._logger.info('Signin googleAuth request completed user with email %s authenticated', retrievedUserFromGoogle.email);
 
-    //     this._logger.info('Signin googleAuth request completed user with email %s authenticated', retrievedUserFromGoogle.email);
-
-    //     res.status(HttpStatus.OK).json({user: userProto, token});
-    // }
+        return {
+            user: {
+                id: databaseUser.id,
+                email: databaseUser.email,
+                username: databaseUser.username
+            },
+            token
+        }
+    }
 }

@@ -6,11 +6,11 @@ import { User } from 'src/database/entities/user/user.entity';
 // import { UserRepository } from 'src/database/repositories';
 import { UserService } from 'src/modules/user/user.service';
 
-import { AuthenticationController } from './authentication.controller';
+import { AuthenticationControllerV1 } from './authentication.controller.v1';
 import { AuthenticationService } from './authentication.service';
 import { UserModule } from '../user/user.module';
 import { MailerModule } from '../mailer/mailer.module';
-// import { GoogleAuthenticationService } from './google.authentication.service';
+import { GoogleAuthenticationService } from './google.authentication.service';
 // import { AuthGuard } from './guards/Auth.guard';
 
 @Module({
@@ -20,12 +20,10 @@ import { MailerModule } from '../mailer/mailer.module';
 		UserModule,
 		MailerModule,
 	],
-	controllers: [AuthenticationController],
+	controllers: [AuthenticationControllerV1],
 	providers: [
 		AuthenticationService,
-		// GoogleAuthenticationService,
-		// UserService,
-		// UserRepository,
+		GoogleAuthenticationService,
 	],
 	exports: [AuthenticationService]
 })
