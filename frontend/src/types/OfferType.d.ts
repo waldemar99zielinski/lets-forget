@@ -1,0 +1,3 @@
+interface OfferType {
+    id: string;
+}

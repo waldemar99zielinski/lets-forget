@@ -13,8 +13,6 @@ import { useSearch } from 'src/context/search/useSearch';
 import { Dialog, DialogProps } from 'src/components/dialog/Dialog';
 import { LocationOption } from 'src/context/search/interfaces';
 
-import { RadiusSlider } from './RadiusSlider';
-
 type ResourceType = 'places' | 'offers';
 
 interface SearchDialogProps {
@@ -117,12 +115,6 @@ export const SearchMapDialog = (props: SearchDialogProps) => {
                     {t('dialog.form.locationMap')}
                 </ToggleButton>
             </ToggleButtonGroup>
-            <RadiusSlider 
-                sx={{
-                    width: '90%'
-                    
-                }}
-            />
             <Button
                 variant='contained'
                 fullWidth

@@ -1,8 +1,14 @@
-import {Icon, IconKeys} from 'src/components/icon';
+import { CenteredView } from 'src/components/pages/CenteredView';
+import { OffersGrid } from 'src/components/offers/list/OffersGrid';
+
+import { useGeolocation } from 'src/hooks/useGeolocation';
+import { useLoadScript } from 'src/hooks/useLoadScript';
 
 export const RootPage = () => {
-    return <>
-        <div>RootPage</div>
-        <Icon iconKey={IconKeys.beer} />
-    </>;
+    // useLoadScript({src: "https://cdn.jsdelivr.net/npm/eruda"}, () => {eruda.init()});
+    return <CenteredView container={{
+        flexDirection: 'column'
+    }}>
+        <OffersGrid />
+    </CenteredView>;
 };

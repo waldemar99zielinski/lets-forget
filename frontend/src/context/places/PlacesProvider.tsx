@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
-import { getPlaces, GetPlacesRequestQuery} from 'src/api/places/places.api';
+import { getPlaces, GetPlacesRequestQuery } from 'src/api/places/places.api';
 
 import { Logger } from 'src/utils/logger';
 
@@ -14,7 +14,7 @@ export const PlacesContext = createContext<PlaceContextInterface>(null!);
 
 export const PlacesProvider = (props: PropsWithChildren<unknown>) => {
     const [places, setPlaces] = useState<Place[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [abortController, setAbortController] = useState(new AbortController());
 
     const refreshPlaces = async (query: GetPlacesRequestQuery) => {
@@ -25,9 +25,8 @@ export const PlacesProvider = (props: PropsWithChildren<unknown>) => {
 
             setPlaces(recevicedPlaces);
         } catch(error) {
-            Logger.error('Cannot refresh places', error);
-        }
-        finally {
+            Logger.error('Refresh places failed', error);
+        } finally {
             setIsLoading(false);
         }
     };

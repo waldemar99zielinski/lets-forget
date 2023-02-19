@@ -19,8 +19,6 @@ export const MapMarker = (props: MapMarkerProps) => {
         })
         : undefined;
 
-    console.log(props.popup);
-
     return <Marker 
         position={{lat: props.latitude, lng: props.longitude}}
         icon={icon}

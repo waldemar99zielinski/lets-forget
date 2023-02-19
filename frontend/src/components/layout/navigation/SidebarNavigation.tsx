@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { theme } from 'src/context/theme/ThemeProvider';
 import { currentlyActive, navigationItems } from './navigationItems';
 
 export const sidebarNavigationWidth = 250;
@@ -20,7 +21,11 @@ export const SidebarNavigation = () => {
         sx={{
             width: sidebarNavigationWidth,
             flexShrink: 0,
-            [`& .MuiDrawer-paper`]: { width: sidebarNavigationWidth, boxSizing: 'border-box' },
+            [`& .MuiDrawer-paper`]: { 
+                width: sidebarNavigationWidth, 
+                boxSizing: 'border-box',
+                backgroundColor: theme.palette.primary.main
+            },
             [`& .Mui-selected`]: {backgroundColor: 'rgba(249, 249, 249, 0.2) !important'},
             [`& .Mui-selected:hover`]: {backgroundColor: 'rgba(249, 249, 249, 0.2)'}
         }}

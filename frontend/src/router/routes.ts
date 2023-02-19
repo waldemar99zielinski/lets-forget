@@ -26,7 +26,7 @@ const pathsStructure: Record<Path, Path | null> = {
         [Path.activate]: Path.auth
 };
 
-export const getPath = (route: Path) => {
+export const getPath = (route: Path, params?: string) => {
     let full_path = '';
 
     let current: Path | null = route;
@@ -35,5 +35,12 @@ export const getPath = (route: Path) => {
         full_path = `/${current}` + full_path;
         current = pathsStructure[current];
     }
+
+    if(params)
+        full_path = full_path + params;
+
+    if(!full_path)
+        return '/';
+
     return full_path;
 }

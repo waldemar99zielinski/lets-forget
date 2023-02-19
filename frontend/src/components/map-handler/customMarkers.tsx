@@ -18,3 +18,15 @@ export const barMarkerProps = (props: Omit<MapMarkerProps, 'icon'> & BarMarkerPr
         popup: <div>{props.name}</div>
     };
 }
+
+export const beerMarkerProps = (props: Omit<MapMarkerProps, 'icon'>): MapMarkerProps => {
+    return {
+        latitude: props.latitude,
+        longitude: props.longitude,
+        icon: {
+            iconKey: IconKeys.beer,
+            scale: 36,
+            style: {marginLeft: -13, marginTop: -15},
+        },
+    };
+}

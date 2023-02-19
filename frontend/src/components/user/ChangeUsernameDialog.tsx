@@ -25,7 +25,7 @@ export const ChangeUsernameDialog = (props: RenameUserDialogProps) => {
     const [remoteError, setRemoteError] = useState('');
 
     if(!user) {
-        Logger.warn('User is not present');
+        Logger.debug('User is not present');
         return null;
     }
 

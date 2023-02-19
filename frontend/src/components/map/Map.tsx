@@ -24,7 +24,7 @@ export const Map = forwardRef((props: MapProps, ref: Ref<L.Map>) => {
 
     const {center = warsawCoords, zoom = defaultZoom} = props;
     
-    return <MapContainer center={center} zoom={13}
+    return <MapContainer center={center} zoom={zoom}
         style={{
             height: '100%',
             width: '100%',
@@ -41,6 +41,6 @@ export const Map = forwardRef((props: MapProps, ref: Ref<L.Map>) => {
                 <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a>`}
             url='https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=ObuHobZwTIovUEDxxnZ0'
         />
-        {props.markers && props.markers.map((markerProps) => <MapMarker {...markerProps} />)}
+        {props.markers && props.markers.map((markerProps, index) => <MapMarker key={index} {...markerProps} />)}
   </MapContainer>;
 });

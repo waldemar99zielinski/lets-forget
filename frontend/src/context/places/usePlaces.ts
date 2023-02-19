@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import { PlacesContext } from './PlacesProvider'
+import { useContext } from 'react';
+import { PlacesContext } from './PlacesProvider';
 
 export const usePlaces = () => {
     const context = useContext(PlacesContext);
@@ -8,4 +8,4 @@ export const usePlaces = () => {
         throw new Error('usePlaces is used outside of its provider');
 
     return context;
-}
+};

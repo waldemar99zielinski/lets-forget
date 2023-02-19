@@ -1,10 +1,10 @@
-import {createTheme, ThemeProvider as MuiThemeProvider, ThemeOptions} from '@mui/material/styles';
+import {createTheme, ThemeProvider as MuiThemeProvider} from '@mui/material/styles';
 import { PropsWithChildren } from 'react';
 
 export const theme = createTheme({
     palette: {
       primary: {
-        main: '#37196D',
+        main: '#1F1E1E',
         contrastText: '#fff',
         light: '#6f3f8e',
         dark: '#090036',
@@ -13,7 +13,7 @@ export const theme = createTheme({
         main: '#f9f9f9',
         contrastText: '#ffffff',
         light: '#7C66BA',
-        dark: '#382971',
+        dark: 'rgba(249, 249, 249, 0.2)',
       },
       text: {
         secondary: 'rgba(255,255,255,0.9)',

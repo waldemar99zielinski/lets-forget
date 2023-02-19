@@ -14,8 +14,6 @@ export const MapHandler = forwardRef((_props: any, ref: Ref<L.Map>) => {
     const {places} = usePlaces();
     const {searchMode} = useSearch();
 
-
-
     const markers = useMemo(() => {
         if(searchMode === 'place') {
             return places.map((place) => barMarkerProps({
