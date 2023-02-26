@@ -13,6 +13,7 @@ import { useIsMobile } from 'src/hooks/useIsMobile';
 export interface DialogProps extends MuiDialogProps {
     open: boolean;
     onClose: () => void;
+    disableClose?: boolean;
 }
 
 const Transition = forwardRef(function Transition(
@@ -31,10 +32,11 @@ const mobileProps: Partial<MuiDialogProps> = {
 
 export const Dialog = (props: PropsWithChildren<DialogProps>) => {
     const isMobile = useIsMobile();
+    const {disableClose = false} = props;
 
     return <MuiDialog 
         open={props.open}
-        onClose={props.onClose}
+        onClose={disableClose ? undefined : props.onClose}
         fullWidth
         {...isMobile ? mobileProps : {}}
     >
@@ -43,14 +45,16 @@ export const Dialog = (props: PropsWithChildren<DialogProps>) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                 {props.title}
             </Typography>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={props.onClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
+            {!disableClose &&
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={props.onClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            }
           </Toolbar>
         </AppBar>
         {props.children}

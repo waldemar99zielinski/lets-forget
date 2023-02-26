@@ -2,7 +2,7 @@ import * as L from 'leaflet';
 import { createContext, PropsWithChildren, useEffect, useState, RefObject } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { SearchMapDialog } from 'src/components/search/SearchMapDialog';
+import { SearchDialog } from 'src/components/search/dialog/SearchMapDialog';
 import { usePlaces } from 'src/context/places/usePlaces';
 
 import { GetPlacesQuery, GetPlacesQuerySchema, GetResourceQuerySchema, ResourceType } from './SearchQueryValidation';
@@ -17,7 +17,7 @@ interface SearchContextInterface {
 export const SearchContext = createContext<SearchContextInterface>(null!);
 
 interface SearchProviderProps {
-    mapRef: RefObject<L.Map>;
+    mapRef?: RefObject<L.Map>;
 }
 
 export const SearchProvider = (props: PropsWithChildren<SearchProviderProps>) => {
@@ -25,8 +25,6 @@ export const SearchProvider = (props: PropsWithChildren<SearchProviderProps>) =>
     const [searchMode, setSearchMode] = useState<ResourceType>();
     const {refreshPlaces} = usePlaces();
     const [searchParams, setSearchParams] = useSearchParams();
-    const isMapPresent = !!props.mapRef;
-
 
     useEffect(() => {
         console.log('SearchProvider params', searchParams, Object.fromEntries(searchParams));
@@ -100,7 +98,7 @@ export const SearchProvider = (props: PropsWithChildren<SearchProviderProps>) =>
         searchMode
     }}>
         {props.children}
-        <SearchMapDialog 
+        <SearchDialog 
             open={isSearchParamsDialogOpen}
             onClose={() => setIsSearchParamsDialogOpen(false)}
         />

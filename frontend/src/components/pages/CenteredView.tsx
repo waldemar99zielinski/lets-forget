@@ -1,7 +1,7 @@
 import Box, { BoxProps } from '@mui/system/Box';
 import { PropsWithChildren } from 'react';
 
-interface CenteredViewProps {
+export interface CenteredViewProps {
     container?: BoxProps;
 }
 

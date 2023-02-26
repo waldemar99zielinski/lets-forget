@@ -1,5 +1,6 @@
 import { CenteredView } from 'src/components/pages/CenteredView';
 import { OffersGrid } from 'src/components/offers/list/OffersGrid';
+import { SearchProvider } from 'src/context/search/SearchProvider';
 
 import { useGeolocation } from 'src/hooks/useGeolocation';
 import { useLoadScript } from 'src/hooks/useLoadScript';

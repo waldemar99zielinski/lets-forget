@@ -21,8 +21,6 @@ export const OfferPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const {state} = useLocation();
 
-    console.log('offer page', state);
-
     useEffect(() => {
         const abortController = new AbortController(); 
 
@@ -56,8 +54,6 @@ export const OfferPage = () => {
 
     if(!id)
         return <Navigate to={getPath(Path.root)} />;
-
-    console.log('after id check')
 
     if(isLoading)
         return <CenteredView>

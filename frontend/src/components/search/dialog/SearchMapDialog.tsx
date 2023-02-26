@@ -6,12 +6,15 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSearch } from 'src/context/search/useSearch';
 import { Dialog, DialogProps } from 'src/components/dialog/Dialog';
 import { LocationOption } from 'src/context/search/interfaces';
+
+import { SearchPlaceForm } from './SearchPlaceForm';
+import { SearchOfferForm } from './SearchOfferForm';
 
 type ResourceType = 'places' | 'offers';
 
@@ -20,10 +23,10 @@ interface SearchDialogProps {
     onClose: DialogProps['onClose'];
 }
 
-export const SearchMapDialog = (props: SearchDialogProps) => {
+export const SearchDialog = (props: SearchDialogProps) => {
     const {t} = useTranslation('search');
     const {setPlaceSearchQuery} = useSearch();
-    const [recourceType, setResourceType] = useState<ResourceType>('places');
+    const [recourceType, setResourceType] = useState<ResourceType>('offers');
     const [locationOption, setLocationOption] = useState<LocationOption | null>(null);
 
     const handleResourceTypeChange = (event: React.SyntheticEvent, newValue: ResourceType) => {
@@ -54,7 +57,11 @@ export const SearchMapDialog = (props: SearchDialogProps) => {
                 justifyContent: 'center',
             }}
         >
-            <Tabs value={recourceType}>
+            <Tabs 
+                value={recourceType} 
+                onChange={(event: SyntheticEvent, newValue: ResourceType) => setResourceType(newValue)}
+                textColor='inherit'
+            >
                 <Tab 
                     label={t('dialog.tabs.offers')}
                     value={'offers'}
@@ -74,18 +81,8 @@ export const SearchMapDialog = (props: SearchDialogProps) => {
                 rowGap: 2
             }}
         >
-            <TextField 
-                label={t('dialog.form.name')}
-                sx={{
-                    width: '100%'
-                }}
-            />
-            <TextField 
-                label={t('dialog.form.street')}
-                sx={{
-                    width: '100%'
-                }}
-            />
+            {recourceType === 'places' && <SearchPlaceForm />
+            || <SearchOfferForm/>}
             <ToggleButtonGroup 
                 value={locationOption}
                 exclusive

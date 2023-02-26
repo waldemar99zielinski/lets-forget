@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 
 interface CircleLoadingProps {
     containerProps?: BoxProps;
-    loadingProps?: CircleLoadingProps;
+    loadingProps?: CircularProgressProps;
 }
 
 export const CircleLoading = forwardRef((props: CircleLoadingProps, ref) => {

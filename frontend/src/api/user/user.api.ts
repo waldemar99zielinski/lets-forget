@@ -12,7 +12,7 @@ export const getUserMe = async () => {
     return response.data;
 }
 
-export type PatchUserMe =  Pick<User, 'username'>;
+export type PatchUserMe = Partial<Pick<User, 'username' | 'defaultCity'>>;
 
 export const patchUserMe = async (request: PatchUserMe) => {
     const response = await authAxios.patch<GetUserMe>(userUrl + '/me', request);

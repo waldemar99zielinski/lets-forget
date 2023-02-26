@@ -9,7 +9,8 @@ export default {
             name: 'Name',
             street: 'Street',
             locationUser: 'Your current location',
-            locationMap: 'Current map location'
+            locationMap: 'Current map location',
+            priceMax: 'Max price'
         }
     }
 }

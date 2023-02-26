@@ -77,8 +77,8 @@ export const ChangeUsernameDialog = (props: RenameUserDialogProps) => {
                     {
                         required: t<string>('dialog.changeUsername.error.required'),
                         validate: {
-                            lengthMin: username => (username.length >= 3 || t<string>('dialog.changeUsername.error.langthMin')),
-                            lengthMax: username => (username.length <= 64 || t<string>('dialog.changeUsername.error.lengthMax'))
+                            lengthMin: username => ((username && username.length >= 3) || t<string>('dialog.changeUsername.error.langthMin')),
+                            lengthMax: username => ((username && username.length <= 64) || t<string>('dialog.changeUsername.error.lengthMax'))
                         },
                         onChange: () => setRemoteError('')
                     }

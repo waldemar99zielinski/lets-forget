@@ -9,6 +9,7 @@ import { NotFound } from 'src/components/not-found/NotFound';
 import { useIsVisible } from 'src/hooks/useIsVisible';
 
 import { OfferCard } from './OfferCard';
+import { CenteredViewLimitedWidth } from 'src/components/pages/CenteredViewLimitedWidth';
 
 const GridContainer = styled.div`
     width: 100%;
@@ -32,30 +33,22 @@ export const OffersGrid = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const {state} = useLocation();
 
-    console.log('offers grid location state', state);
-
     useEffect(() => {
         if(state && state.listScrollY)
             containerRef.current?.scrollTo({top: state.listScrollY})
     }, [state]);
 
-    console.log('isLoadingVisible', isLoadingVisible);
-
-    // console.log(offers)
     useEffect(() => {
         if (!isInitialFetch) {
             refreshOffers({
                 date: new Date(),
                 city: 'Warsaw',
-                // page: isLoadingVisible === true
             });
         }
-     
     }, []);
 
     useEffect(() => {
         if(isLoadingVisible && !isOffersLoading) {
-            console.log('last item', offers.at(-1));
             refreshOffers({
                 date: new Date(),
                 city: 'Warsaw',
@@ -64,11 +57,10 @@ export const OffersGrid = () => {
         }
     }, [isLoadingVisible, isOffersLoading]);
 
-    // setInterval(() => console.log("offers grid ref", containerRef.current?.scrollTop), 10000)
-
-    // TODO write a wrapper to size it properly bo teraz jest na caly ekran
     if(!offers.length)
-        return <NotFound />;
+        return <CenteredViewLimitedWidth>
+            <NotFound />
+        </CenteredViewLimitedWidth>;
 
     return <GridContainer ref={containerRef}>
         {offers.map((offer) => {
