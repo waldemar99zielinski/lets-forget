@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { City } from 'src/database/entities/city/city.entity';
 import { CityRepository } from 'src/database/repositories/city.repository';
 import { LoggerService, LoggerInterface } from 'src/utils/logger';
+import { GetCitiesQueryDto } from './dto/GetCities.dto';
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class CityService {
         await this._cityRepository.create(newCity);
     }
 
-    public async getCities() {
+    public async getCities(query: GetCitiesQueryDto) {
         return this._cityRepository.findAll();
     }
 

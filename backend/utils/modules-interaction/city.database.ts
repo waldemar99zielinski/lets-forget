@@ -57,3 +57,26 @@ export const initializeTestCity = async (cityName = 'Warsaw', countryName = 'Pol
 
     return {cityName, countryName};
 }
+
+const testCitiesData = [
+    {country: 'Poland', city: 'Warsaw'},
+    {country: 'Poland', city: 'Gdańsk'},
+    {country: 'Poland', city: 'Wrocław'},
+    {country: 'Poland', city: 'Kraków'},
+    {country: 'Poland', city: 'Poznań'},
+    {country: 'Germany', city: 'Berlin'},
+    {country: 'Germany', city: 'Munich'},
+    {country: 'England', city: 'London'},
+    {country: 'England', city: 'Manchester'},
+    {country: 'France', city: 'Paris'},
+    {country: 'France', city: 'Lyon'},
+    {country: 'Italy', city: 'Rome'},
+    {country: 'Italy', city: 'Milan'},
+
+]
+
+export const initializeTestCities = async () => {
+    for(const city of testCitiesData) {
+        await initializeTestCity(city.city, city.country);
+    }
+}

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, UseGuards, Headers, NotFoundException, Patch, UsePipes, HttpCode, HttpStatus, UseInterceptors} from '@nestjs/common';
+import { Body, Controller, Get, UseGuards, Headers, NotFoundException, Patch, UsePipes, HttpCode, HttpStatus, UseInterceptors, UnauthorizedException} from '@nestjs/common';
 
 import { LoggerInterface, LoggerService } from 'src/utils/logger/logger.service';
 import { JoiObjectSchemaPipe } from 'src/common/pipes/JoiObjectSchema.pipe';
@@ -31,7 +31,7 @@ export class UserController {
 
         if(!user) {
             this._logger.error('Get me request failed, not found user %s', userId);
-            throw new NotFoundException();
+            throw new UnauthorizedException();
         }
 
         this._logger.info('Get me request completed from user %s', userId);
@@ -39,7 +39,9 @@ export class UserController {
         return {
             id: user.id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            authStrategy: user.authStrategy,
+            defaultCity: user.defaultCity
         };
     }
 

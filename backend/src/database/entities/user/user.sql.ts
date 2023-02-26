@@ -5,6 +5,7 @@ export const createUsersTable = `
 
     CREATE TABLE "users" (
         id                  uuid DEFAULT uuid_generate_v4(),
+        default_city     TEXT,
 
         email               TEXT NOT NULL,
         is_email_confirmed  BOOLEAN NOT NULL DEFAULT FALSE,
@@ -16,7 +17,10 @@ export const createUsersTable = `
 
         PRIMARY KEY (id),
         CONSTRAINT user_unique_email_auth_strategy_constraint UNIQUE(email, auth_strategy),
-        UNIQUE(username)
+        UNIQUE(username),
+        CONSTRAINT fk_user_city
+            FOREIGN KEY (default_city)
+                REFERENCES cities(id)
     );
 
     CREATE OR REPLACE FUNCTION default_username_as_id()

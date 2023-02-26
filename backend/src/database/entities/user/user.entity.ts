@@ -11,6 +11,9 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Column({name: 'default_city', type: 'text', nullable: true})
+    defaultCity?: string;
+
     @Column('text')
     email: string;
 

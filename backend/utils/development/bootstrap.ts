@@ -4,6 +4,7 @@ import { Place } from '../../src/database/entities/place/place.entity';
 import { OfferType } from '../../src/database/entities/offer-type/offer-type.entity';
 import { Offer } from '../../src/database/entities/offer/offer.entity';
 
+import { initializeTestCities } from '../modules-interaction/city.database';
 import { createTestPlace } from '../modules-interaction/place.api';
 import { createTestOffer } from '../modules-interaction/offer.api';
 import { createOfferType } from '../modules-interaction/offert-type.database';
@@ -23,6 +24,9 @@ const bootstrap = async () => {
     console.log('Truncating database');
     await truncateCountriesTable();
 
+    console.log('Creating cities');
+    await initializeTestCities();
+    console.log('Cities created');
     console.log('Creating places');
     const createPlaces = async () => {
         for(const place of places) {
