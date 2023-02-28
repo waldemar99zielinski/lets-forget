@@ -13,6 +13,7 @@ import { MobileUserMenuPage } from 'src/pages/MobileUserMenuPage';
 
 import { SignInPage } from 'src/pages/authorization/SignInPage';
 import { SignUpPage } from 'src/pages/authorization/SignUpPage';
+import { SingOutPage } from 'src/pages/authorization/SignOutPage';
 import { EmailActivationPage } from 'src/pages/authorization/EmailActivationPage';
 
 import { getPath, Path } from './routes';
@@ -36,6 +37,7 @@ export const AppRouter = () => {
                 <Route index element={<Navigate to={getPath(Path.signIn)} />} />
                 <Route path={getPath(Path.signIn)} element={<SignInPage />} />
                 <Route path={getPath(Path.signUp)} element={<SignUpPage />} />
+                <Route path={getPath(Path.signOut)} element={<SingOutPage />} />
                 <Route path={getPath(Path.activate)} element={<EmailActivationPage />} />
             </Route>
             <Route path='*' element={<Navigate to={getPath(Path.root)} />} />
