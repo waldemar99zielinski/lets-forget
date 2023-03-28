@@ -7,9 +7,11 @@ import { useLoadScript } from 'src/hooks/useLoadScript';
 
 export const RootPage = () => {
     // useLoadScript({src: "https://cdn.jsdelivr.net/npm/eruda"}, () => {eruda.init()});
-    return <CenteredView container={{
-        flexDirection: 'column'
-    }}>
-        <OffersGrid />
-    </CenteredView>;
+    return <SearchProvider>
+        <CenteredView container={{
+            flexDirection: 'column'
+        }}>
+            <OffersGrid />
+        </CenteredView>
+    </SearchProvider> ;
 };

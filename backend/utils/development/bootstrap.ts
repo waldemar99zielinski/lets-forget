@@ -9,9 +9,12 @@ import { createTestPlace } from '../modules-interaction/place.api';
 import { createTestOffer } from '../modules-interaction/offer.api';
 import { createOfferType } from '../modules-interaction/offert-type.database';
 import { createTestOfferSchedule } from '../modules-interaction/offer-schedule.api';
+import { createTestUser } from '../modules-interaction/auth.api';
 import { truncateCountriesTable } from '../modules-interaction/country.database';
+import { activateUserEmail } from '../modules-interaction/auth.databse';
 
 import { places } from './places.data';
+import { userData } from './users.data';
 import { offerTypeData } from './offer-types.data';
 
 const NUMBER_OF_OFFERS = 500;
@@ -79,6 +82,17 @@ const bootstrap = async () => {
     }
     await createOffersSchedules();
     console.log('Offers schedules created');
+
+    console.log('Creating users');
+    const createUsers = async () => {
+        for(const user of userData) {
+            await createTestUser(user);
+
+            await activateUserEmail({email: user.email});
+        }
+    };
+    await createUsers();
+    console.log('Users created');
 }
 
 void bootstrap();

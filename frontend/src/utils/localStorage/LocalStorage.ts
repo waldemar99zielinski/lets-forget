@@ -1,7 +1,9 @@
 export enum LocalStorageKeys {
     // auth
-    accessToken = 'lfac'
+    accessToken = 'lfac',
 
+    // user
+    defaultCity = 'lfdc'
     // development
 
 }

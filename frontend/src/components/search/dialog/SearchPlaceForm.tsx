@@ -1,7 +1,14 @@
 import TextField from '@mui/material/TextField';
 import { useTranslation } from 'react-i18next';
+import { UseFormRegister } from 'react-hook-form';
 
-export const SearchPlaceForm = () => {
+import { SetPlaceSearchQueryParams } from 'src/context/search/interfaces';
+
+interface SearchPlaceFormProps {
+    formRegister: UseFormRegister<SetPlaceSearchQueryParams>
+}
+
+export const SearchPlaceForm = (props: SearchPlaceFormProps) => {
     const {t} = useTranslation('search');
 
     return <>
@@ -10,12 +17,18 @@ export const SearchPlaceForm = () => {
             sx={{
                 width: '100%'
             }}
+            {...props.formRegister(
+                'name'
+            )}
         />
         <TextField 
             label={t('dialog.form.street')}
             sx={{
                 width: '100%'
             }}
+            {...props.formRegister(
+                'street'
+            )}
         />
     </>;
 }

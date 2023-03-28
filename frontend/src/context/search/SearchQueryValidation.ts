@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
+import { StandardOfferTypes } from 'src/types/OfferType';
 
-export type ResourceType = 'place' | 'offer'
+export type ResourceType = 'place' | 'offer';
 
 export interface GetResourceQuery {
     resource: ResourceType
@@ -46,4 +47,39 @@ export const GetPlacesQuerySchema = Joi.object<GetPlacesQuery>({
     e: longitudeSchema.greater(Joi.ref('w'))
 })
     .or('city', 'name', 'street', 'n', 's', 'w', 'e')
+    .and('n', 's', 'w', 'e');
+
+export interface GetOffersQuery {
+    resource: ResourceType
+    name?: string;
+    type?: StandardOfferTypes;
+    priceMax?: number;
+
+    date?: Date;
+
+    placeId?: string;
+    city?: string;
+    n?: number; // latitude
+    s?: number; // latitude
+    w?: number; // longitude
+    e?: number; // longitude
+}
+
+export const GetOffersQuerySchema = Joi.object<GetOffersQuery>({
+    resource,
+    name: Joi.string(),
+    type: Joi.string().valid(...Object.values(StandardOfferTypes)),
+    priceMax: Joi.number().min(0),
+
+    date: Joi.date(),
+
+    placeId: Joi.string().uuid({version: 'uuidv4'}),
+    city: Joi.string(),
+    n: latitudeSchema.greater(Joi.ref('s')),
+    s: latitudeSchema,
+    w: longitudeSchema,
+    e: longitudeSchema.greater(Joi.ref('w'))
+})
+    .rename('price-max', 'priceMax')
+    .or('name', 'type', 'priceMax', 'date', 'placeId', 'city', 'n', 's', 'w', 'e')
     .and('n', 's', 'w', 'e');

@@ -9,106 +9,47 @@ import Tooltip from '@mui/material/Tooltip';
 import { FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { patchUserMe, PatchUserMe } from 'src/api/user/user.api';
-import { useAlert } from 'src/context/alerts/useAlert';
+import { useContriesCities } from 'src/context/countries-cities/useCountriesCities';
 import { Dialog, DialogProps } from 'src/components/dialog/Dialog';
-import { useUser } from 'src/context/user/useUser';
-import { Logger } from 'src/utils/logger';
-import { getCountries } from 'src/api/countries/countries.api';
-import { getCities } from 'src/api/cities/cities.api';
 import { CircleLoading } from 'src/components/loading/CircleLoading';
-import { lineHeight } from '@mui/system';
 
 interface SelectDefaultCityDialogProps {
     open: DialogProps['open'];
     onClose: DialogProps['onClose'];
+    defaultCity: string | null | undefined;
+    selectedCity: string;
+    setSelectedCity: (city: string) => void;
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>;
+    isSubmitLoading: boolean;
 }
 
-export const SelectDefaultCityDialog = (props: SelectDefaultCityDialogProps) => {
+export const SelectDefaultCityDialogBase = (props: SelectDefaultCityDialogProps) => {
     const {t} = useTranslation('user');
-    const [updateUserCityError] = useAlert({text: t('dialog.selectDefaultCity.error.request'), type: 'error', closeAfter: 3_000});
-    const {user, updateUser} = useUser();
-    const [isFetchCountriesLoading, setIsFetchCountriesLoading] = useState(true);
-    const [isFetchCitiesLoading, setIsFetchCitiesLoading] = useState(true);
-    const [countiresList, setCountriesList] = useState<Country[]>([]);
+    const {
+        countriesList,
+        countriesFetchStatus,
+        citiesList,
+        cityFetchStatus,
+    } = useContriesCities();
     const [selectedCountry, setSelectedCountry] = useState('');
-    const [citiesList, setCitiesList] = useState<City[]>([]);
-    const [selectedCity, setSelectedCity] = useState('');
-    const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
     useEffect(() => {
-        if(!user || !user.defaultCity)
+        if(countriesFetchStatus === 'loading' || cityFetchStatus === 'loading')
             return;
 
-        setSelectedCity(user.defaultCity);
-    }, [user]);
-
-    useEffect(() => {
-        const abortCountries = new AbortController();
-        const abortCities = new AbortController();
-
-        (async () => {
-            setIsFetchCountriesLoading(true);
-
-            const countries = await getCountries();
-
-            setCountriesList(countries);
-
-            setIsFetchCountriesLoading(false);
-            setIsFetchCitiesLoading(true);
-
-            const cities = await getCities();
-
-            setCitiesList(cities);
-
-            setIsFetchCitiesLoading(false);
-        })();
-
-        return () => {
-            abortCountries.abort();
-            abortCities.abort();
-        };
-    }, []);
-
-    useEffect(() => {
-        if(isFetchCountriesLoading || isFetchCitiesLoading)
-            return;
-
-        if(selectedCity) {
-            const cityInfo = citiesList.filter(city => city.id === selectedCity)[0];
+        if(props.selectedCity) {
+            const cityInfo = citiesList.filter(city => city.id === props.selectedCity)[0];
             setSelectedCountry(cityInfo.countryId);
         }
-    }, [isFetchCountriesLoading, isFetchCitiesLoading, selectedCity]);
-
-    if(!user) {
-        Logger.debug('User is not present');
-        return null;
-    }
-
-    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if(!selectedCity || !selectedCountry)
-            return;
-
-        try {
-            setIsSubmitLoading(true);
-            await patchUserMe({defaultCity: selectedCity});
-            updateUser({defaultCity: selectedCity});
-            setIsSubmitLoading(false);
-            props.onClose();
-        } catch(error: any) {
-            Logger.error('Change username error', error);
-            updateUserCityError();
-        }
-    };
+    }, [countriesFetchStatus, cityFetchStatus, props.selectedCity]);
 
     return <Dialog
         title={t<string>('dialog.selectDefaultCity.title')}
         open={props.open}
         onClose={props.onClose}
-        disableClose={!user.defaultCity}
+        disableClose={!props.defaultCity}
     >
-        <form onSubmit={onSubmit}>
+        <form onSubmit={props.onSubmit}>
             <Typography
                 sx={{
                     padding: '1rem'
@@ -132,9 +73,9 @@ export const SelectDefaultCityDialog = (props: SelectDefaultCityDialogProps) => 
                         label={t('offerType')}
                         onChange={(event: SelectChangeEvent) => setSelectedCountry(event.target.value)}
                         fullWidth
-                        disabled={isFetchCountriesLoading}
+                        disabled={countriesFetchStatus !== 'success'}
                     >
-                        {countiresList.map((country, index) => <MenuItem
+                        {countriesList.map((country, index) => <MenuItem
                             key={index}
                             value={country.id}
                         >
@@ -148,14 +89,14 @@ export const SelectDefaultCityDialog = (props: SelectDefaultCityDialogProps) => 
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={selectedCity}
+                            value={props.selectedCity}
                             label={t('offerType')}
-                            onChange={(event: SelectChangeEvent) => setSelectedCity(event.target.value)}
+                            onChange={(event: SelectChangeEvent) => props.setSelectedCity(event.target.value)}
                             fullWidth
-                            disabled={!selectedCity ||(isFetchCitiesLoading || !selectedCountry)}
+                            disabled={(cityFetchStatus !== 'success' || !selectedCountry)}
                         >
-                            {isFetchCitiesLoading && selectedCity
-                            ? <MenuItem value={selectedCity}>{selectedCity}</MenuItem>
+                            {cityFetchStatus === 'loading' && props.selectedCity
+                            ? <MenuItem value={props.selectedCity}>{props.selectedCity}</MenuItem>
                             : citiesList.filter((city) => city.countryId === selectedCountry).map((city, index) => <MenuItem
                                 key={index}
                                 value={city.id}
@@ -174,7 +115,7 @@ export const SelectDefaultCityDialog = (props: SelectDefaultCityDialogProps) => 
                     columnGap: '0.5rem'
                 }}
             >
-                {user.defaultCity && <Button
+                {props.defaultCity && <Button
                     variant='contained'
                     fullWidth
                     onClick={props.onClose}
@@ -185,9 +126,9 @@ export const SelectDefaultCityDialog = (props: SelectDefaultCityDialogProps) => 
                     variant='contained'
                     fullWidth
                     type='submit'
-                    disabled={isSubmitLoading}
+                    disabled={props.isSubmitLoading}
                 >
-                    {isSubmitLoading ? <CircleLoading loadingProps={{size: 25}}/> : t('dialog.selectDefaultCity.buttons.save')}
+                    {props.isSubmitLoading ? <CircleLoading loadingProps={{size: 25}}/> : t('dialog.selectDefaultCity.buttons.save')}
                 </Button>
             </Box>
         </form>

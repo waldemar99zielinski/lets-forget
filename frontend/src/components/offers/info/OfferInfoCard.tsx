@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import SearchIcon from '@mui/icons-material/Search';
-
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 
 import { getOfferTypeProps } from 'src/components/offers/common/getOfferTypeProps';
 import { Map } from 'src/components/map/Map';
@@ -100,7 +100,7 @@ export const OfferInfoCard = (props: OfferInfoCardProps) => {
                     <Toolbar 
                         items={[
                             {
-                                icon: <SearchIcon />
+                                icon: <SettingsOverscanIcon />
 
                             }
                         ]}

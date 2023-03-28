@@ -2,15 +2,19 @@ import * as L from 'leaflet';
 import { createContext, PropsWithChildren, useEffect, useState, RefObject } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { SearchDialog } from 'src/components/search/dialog/SearchMapDialog';
+import { SearchDialog } from 'src/components/search/dialog/SearchDialog';
 import { usePlaces } from 'src/context/places/usePlaces';
+import { useOffers } from 'src/context/offers/useOffers';
+import { useGlobalContext } from 'src/context/global/useGlobalContext';
+import { useUser } from 'src/context/user/useUser';
 
-import { GetPlacesQuery, GetPlacesQuerySchema, GetResourceQuerySchema, ResourceType } from './SearchQueryValidation';
-import { SetPlaceSearchQueryParams } from './interfaces';
+import { GetPlacesQuery, GetPlacesQuerySchema, GetResourceQuerySchema, ResourceType, GetOffersQuery, GetOffersQuerySchema } from './SearchQueryValidation';
+import { SetPlaceSearchQueryParams, SetOfferSearchQueryParams } from './interfaces';
 
 interface SearchContextInterface {
     openDialog: () => void;
     setPlaceSearchQuery: (query: SetPlaceSearchQueryParams) => void;
+    setOfferSearchQuery: (query: SetOfferSearchQueryParams) => void;
     searchMode: ResourceType | undefined;
 }
 
@@ -21,9 +25,12 @@ interface SearchProviderProps {
 }
 
 export const SearchProvider = (props: PropsWithChildren<SearchProviderProps>) => {
-    const [isSearchParamsDialogOpen, setIsSearchParamsDialogOpen] = useState(false);
+    const {isSearchDialogOpened, setIsSearchDialogOpened} = useGlobalContext();
     const [searchMode, setSearchMode] = useState<ResourceType>();
     const {refreshPlaces} = usePlaces();
+    const {refreshOffers} = useOffers();
+    // TODO unlogged users XD
+    // const {de} = useUser();
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
@@ -62,10 +69,36 @@ export const SearchProvider = (props: PropsWithChildren<SearchProviderProps>) =>
             });
         }
 
+        if(resourceValue.resource === 'offer') {
+            const {value, error} 
+                = GetOffersQuerySchema.validate(Object.fromEntries(searchParams))
+            
+            console.log('SearchProvider params offer', value, error);
+            
+            if(error) {
+                setSearchParams();
+                return;
+            }
+
+            setSearchMode('offer');
+
+            const query = {
+                ...value,
+                resource: undefined
+            }
+
+            // if(!query.city || !query.placeId || !query.n) {
+            //     query.city = 
+            // }
+
+            void refreshOffers(query);
+
+            console.log('after refresh offer with query', query);
+        }
+
     }, [searchParams]);
 
     const setPlaceSearchQuery = (params: SetPlaceSearchQueryParams) => {
-        const searchParams = new URLSearchParams();
         const queryObject = {resource: 'place'} as GetPlacesQuery;
 
         console.log('setPlaceSearchQuery start');
@@ -92,15 +125,36 @@ export const SearchProvider = (props: PropsWithChildren<SearchProviderProps>) =>
         setSearchParams(new URLSearchParams(queryObject as any));
     };
 
+
+
+    // TODO prio 100%
+    const setOfferSearchQuery = (params: SetOfferSearchQueryParams) => {
+        const queryObject = {resource: 'offer'} as GetOffersQuery;
+
+        console.log('setOfferSearchParam', params);
+
+        if(params.name)
+            queryObject.name = params.name;
+
+        if(params.offerType)
+            queryObject.type = params.offerType;
+
+        if(params.maxPrice)
+            queryObject.priceMax = params.maxPrice;
+
+        setSearchParams(new URLSearchParams(queryObject as any));
+    };
+
     return <SearchContext.Provider value={{
-        openDialog: () => setIsSearchParamsDialogOpen(true),
+        openDialog: () => setIsSearchDialogOpened(true),
         setPlaceSearchQuery,
-        searchMode
+        setOfferSearchQuery,
+        searchMode,
     }}>
         {props.children}
         <SearchDialog 
-            open={isSearchParamsDialogOpen}
-            onClose={() => setIsSearchParamsDialogOpen(false)}
+            open={isSearchDialogOpened}
+            onClose={() => setIsSearchDialogOpened(false)}
         />
     </SearchContext.Provider>
 }

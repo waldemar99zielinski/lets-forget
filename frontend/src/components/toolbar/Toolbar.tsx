@@ -16,9 +16,9 @@ export const Toolbar = (props: ToolbarProps) => {
         sx={{
             display: 'flex',
             flexDirection: 'column',
-            rowGap: 1
+            rowGap: 1,
+            ...props.containerProps
         }}
-        {...props.containerProps}
     >
         {props.items.map((element, index) => <ToolbarItem key={index} {...element.props}>
             {element.icon}

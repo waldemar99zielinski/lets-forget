@@ -5,16 +5,13 @@ import { backendBaseV1 } from 'src/api/endpoints';
 const offerUrl = backendBaseV1 + '/offer';
 
 export interface GetOffersQueryDto {
-    placeId?: string;
-    type?: string;
+    name?: string;
     priceMax?: number;
-    date: Date;
 
-    //location
+    date?: Date;
 
-    city?: string,
-
-    // coordinates of bounds
+    placeId?: string;
+    city?: string;
     n?: number; // latitude
     s?: number; // latitude
     w?: number; // longitude

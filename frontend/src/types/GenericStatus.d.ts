@@ -1,0 +1,1 @@
+type GenericFetchStatus = 'unset' | 'loading' | 'success' | 'error';

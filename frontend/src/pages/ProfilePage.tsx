@@ -7,12 +7,14 @@ import { InputGridRow } from 'src/components/grid/InputGridRow';
 import { useUser } from 'src/context/user/useUser';
 import { CircleLoading } from 'src/components/loading/CircleLoading';
 import { CenteredView } from 'src/components/pages/CenteredView';
+import { useContriesCities } from 'src/context/countries-cities/useCountriesCities';
 
 export const ProfilePage = () => {
     const {t} = useTranslation('user');
-    const {user, isLoading, setIsSelectDefaultCityDialogOpen} = useUser();
+    const {user, userFetchStatus} = useUser();
+    const {openSelectDefaultCityDialog} = useContriesCities();
 
-    if(isLoading)
+    if(userFetchStatus === 'loading')
         return <CenteredView>
             <CircleLoading />
         </CenteredView>;
@@ -60,7 +62,7 @@ export const ProfilePage = () => {
                     label={t('profilePage.items.location.defaultLocationLabel')}
                     inputProps={{
                         value: user.defaultCity,
-                        onClick: () => setIsSelectDefaultCityDialogOpen(true)
+                        onClick: () => openSelectDefaultCityDialog()
                     }}
                 />
             </GridContainer>

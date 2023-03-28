@@ -7,9 +7,9 @@ import { useOffers } from 'src/context/offers/useOffers';
 import { CircleLoading } from 'src/components/loading/CircleLoading';
 import { NotFound } from 'src/components/not-found/NotFound';
 import { useIsVisible } from 'src/hooks/useIsVisible';
+import { CenteredViewLimitedWidth } from 'src/components/pages/CenteredViewLimitedWidth';
 
 import { OfferCard } from './OfferCard';
-import { CenteredViewLimitedWidth } from 'src/components/pages/CenteredViewLimitedWidth';
 
 const GridContainer = styled.div`
     width: 100%;
