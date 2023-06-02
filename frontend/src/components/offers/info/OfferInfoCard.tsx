@@ -35,6 +35,9 @@ const Container = styled(Paper)<ContainerProps>`
 `;
 
 export const OfferInfoCard = (props: OfferInfoCardProps) => {
+
+    console.log('OfferInfoCard props:', props);
+
     const {offer} = props;
     const [mapRef] = useRefCallback<L.Map>((ref) => {
         ref.current.dragging.disable();

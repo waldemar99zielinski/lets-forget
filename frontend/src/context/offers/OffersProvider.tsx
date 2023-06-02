@@ -5,12 +5,14 @@ import { Logger } from 'src/utils/logger';
 
 interface OffersContextInterface {
     offers: Offer[];
-    refreshOffers: (query: GetOffersQueryDto) => Promise<void>;
+    refreshOffers: (query?: GetOffersQueryDto, mode?: QueryMode) => Promise<void>;
     isLoading: boolean;
     isNoMoreOffers: boolean;
     isInitialFetch: boolean;
     getCachedOfferById: (id: string) => Offer | undefined;
 }
+
+type QueryMode = 'override' | 'append';
 
 export const OffersContext = createContext<OffersContextInterface>(null!);
 
@@ -19,23 +21,33 @@ export const OffersProvider = (props: PropsWithChildren<unknown>) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isInitialFetch, setIsInitialFetch] = useState(false);
     const [isNoMoreOffers, setIsNoMoreOffers] = useState(false);
+    const queryMemoRef = useRef<GetOffersQueryDto | undefined>();
     const abortControllerRef = useRef<AbortController>(new AbortController());
 
-    const refreshOffers = async (query: GetOffersQueryDto) => {
+    const refreshOffers = async (query?: GetOffersQueryDto, mode: QueryMode = 'override') => {
         try {
             setIsLoading(true);
 
+            if(query && mode === 'override')
+                queryMemoRef.current = query;
+            else if(query && mode === 'append')
+                queryMemoRef.current = queryMemoRef ? {...queryMemoRef.current, ...query} : query;
+
+            if(!queryMemoRef.current)
+                throw new Error('refreshOffers query not provided and not found in memory');
+            
+            abortControllerRef.current.abort();
             abortControllerRef.current = new AbortController();
-            const receivedOffers = await getOffers(query, abortControllerRef.current.signal);
+            const receivedOffers = await getOffers(queryMemoRef.current, abortControllerRef.current.signal);
 
             console.log('after refresh')
 
-            if(query.page && receivedOffers.length > 0) {
+            if(queryMemoRef.current.page && receivedOffers.length > 0) {
                 Logger.debug('refresh offers: appending');
 
                 setOffers(currentOffers => ([...currentOffers, ...receivedOffers]));
             }
-            else if(query.page && receivedOffers.length === 0) {
+            else if(queryMemoRef.current.page && receivedOffers.length === 0) {
                 Logger.debug('refresh offers: no more offers');
                 setIsNoMoreOffers(true);
             }
