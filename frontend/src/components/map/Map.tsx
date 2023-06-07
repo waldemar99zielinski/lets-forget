@@ -3,7 +3,7 @@ import './map.css';
 
 import * as L from 'leaflet';
 import { forwardRef, Ref } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 
 import { MapMarker, MapMarkerProps } from './MapMarker';
 
@@ -42,5 +42,7 @@ export const Map = forwardRef((props: MapProps, ref: Ref<L.Map>) => {
             url='https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=ObuHobZwTIovUEDxxnZ0'
         />
         {props.markers && props.markers.map((markerProps, index) => <MapMarker key={index} {...markerProps} />)}
+
+        {/* {props.markers && props.markers.map((markerProps, index) => <Marker key={index} position={[markerProps.latitude, markerProps.longitude]} > </Marker>)} */}
   </MapContainer>;
 });
