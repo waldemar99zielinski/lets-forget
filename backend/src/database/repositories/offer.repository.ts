@@ -63,8 +63,7 @@ export class OfferRepository extends BaseRepository<Offer> {
 
         //TODO pomyśl nad tym tej
         if(query.city) {
-            createQuery.leftJoinAndSelect('o.place', 'place', 'place.city_id = :city', {city: query.city});
-            // createQuery.leftJoinAndSelect('places', 'p', 'o.place_id = p.id AND p.city_id = :city', {city: query.city});
+            createQuery.innerJoinAndSelect('o.place', 'place', 'place.city_id = :city', {city: query.city});
         }
 
         if(query.placeId) {
@@ -89,10 +88,7 @@ export class OfferRepository extends BaseRepository<Offer> {
             createQuery.andWhere('"starts_at" <= :date', {date: query.date});
             createQuery.andWhere('("ends_at" >= :date OR "ends_at" = NULL)', {date: query.date});
             createQuery.leftJoinAndSelect('o.schedules', 'schedules');
-            createQuery.andWhere(subQ => {
-                subQ.where('(schedules.offer_id IS NULL')
-                subQ.orWhere('(schedules.day_of_the_week = :day AND schedules.start_time <= :time AND schedules.end_time > :time))', {day: DaysOfTheWeek[query.date.getDay()], time: getHoursFormat(query.date)})
-            });
+            createQuery.andWhere('(schedules.offer_id IS NULL OR (schedules.day_of_the_week = :day AND schedules.start_time <= :time AND schedules.end_time > :time))', {day: DaysOfTheWeek[query.date.getDay()], time: getHoursFormat(query.date)});
         }
 
         // pagination
@@ -103,6 +99,8 @@ export class OfferRepository extends BaseRepository<Offer> {
         createQuery.orderBy('o.id', 'ASC');
         createQuery.limit(query.size);
 
-        return createQuery.getMany();
+        const result = await createQuery.getMany();
+
+        return result;
     }
 }
