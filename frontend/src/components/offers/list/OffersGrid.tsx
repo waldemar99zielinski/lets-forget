@@ -27,8 +27,15 @@ const GridContainer = styled.div`
     overflow: auto;
 `;
 
-export const OffersGrid = () => {
-    const {isLoading: isOffersLoading, isInitialFetch, isNoMoreOffers, offers, refreshOffers} = useOffers();
+interface OffersGridProps {
+    offers: Offer[];
+    isNoMoreOffers: boolean;
+    isLoading: boolean;
+    nextPage: () => void | Promise<void>;
+}
+
+export const OffersGrid = (props: OffersGridProps) => {
+    // const {isLoading: isOffersLoading, isNoMoreOffers, offers, refreshOffers} = useOffers();
     const [isLoadingVisible, loadingRef] = useIsVisible();
     const containerRef = useRef<HTMLDivElement>(null);
     const {state} = useLocation();
@@ -38,35 +45,23 @@ export const OffersGrid = () => {
             containerRef.current?.scrollTo({top: state.listScrollY})
     }, [state]);
 
+    // pagination
     useEffect(() => {
-        if (!isInitialFetch) {
-            refreshOffers({
-                date: new Date(),
-                city: 'Warsaw',
-            });
+        if(isLoadingVisible && !props.isLoading) {
+            props.nextPage();
         }
-    }, []);
+    }, [isLoadingVisible, props.isLoading, props.nextPage]);
 
-    useEffect(() => {
-        if(isLoadingVisible && !isOffersLoading) {
-            refreshOffers({
-                date: new Date(),
-                city: 'Warsaw',
-                page: offers.at(-1)?.id
-            });
-        }
-    }, [isLoadingVisible, isOffersLoading]);
-
-    if(!offers.length)
+    if(!props.offers.length && !props.isLoading)
         return <CenteredViewLimitedWidth>
             <NotFound />
         </CenteredViewLimitedWidth>;
 
     return <GridContainer ref={containerRef}>
-        {offers.map((offer) => {
+        {props.offers.map((offer) => {
             return <OfferCard key={offer.id} offer={offer} parentContainerRef={containerRef} />;
         })}
-        {!isNoMoreOffers && <CircleLoading 
+        {!props.isNoMoreOffers && <CircleLoading 
             containerProps={{
                 display: 'flex',
                 justifyContent: 'center',
